@@ -256,39 +256,28 @@ export function PurchaseForm({
                 placeholder="Anything you want to remember about this purchase…"
               />
             </div>
-            <ReceiptInput
-              ocrEnabled={ocrEnabled}
-              hasReceipt={hasReceipt}
-              scanning={scanning}
-              scanError={scanError}
-              scanFilled={scanFilled}
-              onScan={onScan}
-              receiptRef={receiptRef}
-              onChange={() => {
-                setHasReceipt(Boolean(receiptRef.current?.files?.length));
-                setScanError(null);
-                setScanFilled(false);
-              }}
-            />
           </div>
         </div>
       )}
 
-      {scannedItems ? (
-        <ReceiptInputCompact
-          ocrEnabled={ocrEnabled}
-          hasReceipt={hasReceipt}
-          scanning={scanning}
-          scanError={scanError}
-          scanFilled={scanFilled}
-          onScan={onScan}
-          receiptRef={receiptRef}
-          onChange={() => {
-            setHasReceipt(Boolean(receiptRef.current?.files?.length));
-            setScanError(null);
-          }}
-        />
-      ) : null}
+      {/* The file input MUST stay mounted across mode switches. If we
+          unmounted it when scannedItems flips on, the browser would drop
+          the user's selected file (file inputs can't be set
+          programmatically), and createReceipt would never get the image. */}
+      <ReceiptInput
+        ocrEnabled={ocrEnabled}
+        hasReceipt={hasReceipt}
+        scanning={scanning}
+        scanError={scanError}
+        scanFilled={scanFilled}
+        onScan={onScan}
+        receiptRef={receiptRef}
+        onChange={() => {
+          setHasReceipt(Boolean(receiptRef.current?.files?.length));
+          setScanError(null);
+          setScanFilled(false);
+        }}
+      />
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
@@ -527,26 +516,6 @@ function ReceiptInput({
       ) : scanFilled ? (
         <p className="mt-2 text-xs text-accent">Filled from receipt — review before saving.</p>
       ) : null}
-    </div>
-  );
-}
-
-function ReceiptInputCompact(props: {
-  ocrEnabled: boolean;
-  hasReceipt: boolean;
-  scanning: boolean;
-  scanError: string | null;
-  scanFilled: boolean;
-  onScan: () => void;
-  receiptRef: React.RefObject<HTMLInputElement>;
-  onChange: () => void;
-}) {
-  // The file input still needs to live in the form so the server action can
-  // attach the receipt to the receipts row. Render a slim version below the
-  // items list so the user can re-scan if they grabbed the wrong file.
-  return (
-    <div className="rounded-card border border-border p-3">
-      <ReceiptInput {...props} />
     </div>
   );
 }
