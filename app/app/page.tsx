@@ -61,22 +61,25 @@ export default async function DashboardPage() {
       .limit(5),
     supabase
       .from("purchases")
-      .select("price_cents, quantity")
+      .select("price_cents")
       .gte("order_date", today.slice(0, 7) + "-01"),
     supabase
       .from("purchases")
-      .select("price_cents, quantity, order_date, category:categories(name, color)")
+      .select("price_cents, order_date, category:categories(name, color)")
       .gte("order_date", chartStart),
   ]);
 
   const { data: merchantRows } = await supabase
     .from("purchases")
-    .select("merchant, price_cents, quantity")
+    .select("merchant, price_cents")
     .gte("order_date", chartStart);
 
+  // NOTE: dashboard aggregations sum price_cents only and ignore
+  // `quantity` until we audit legacy rows where price_cents may have been
+  // stored as the line total (#12). Once verified, switch back to
+  // `price_cents * quantity` to avoid undercounting multi-quantity rows.
   const monthSpend = (monthRows ?? []).reduce(
-    (sum, r: { price_cents: number; quantity: number | null }) =>
-      sum + r.price_cents * (r.quantity ?? 1),
+    (sum, r: { price_cents: number }) => sum + r.price_cents,
     0,
   );
 
@@ -92,7 +95,7 @@ export default async function DashboardPage() {
   const spendByMonth = bucketByMonth(today, (chartRows ?? []) as ChartRow[]);
   const byCategory = bucketByCategory((chartRows ?? []) as ChartRow[]);
   const byMerchant = bucketByMerchant(
-    (merchantRows ?? []) as { merchant: string | null; price_cents: number; quantity: number | null }[],
+    (merchantRows ?? []) as { merchant: string | null; price_cents: number }[],
   );
 
   return (
@@ -209,13 +212,11 @@ function ComingSoon() {
   );
 }
 
-function bucketByMerchant(
-  rows: { merchant: string | null; price_cents: number; quantity: number | null }[],
-) {
+function bucketByMerchant(rows: { merchant: string | null; price_cents: number }[]) {
   const map = new Map<string, number>();
   for (const r of rows) {
     const key = r.merchant?.trim() || "Unknown";
-    map.set(key, (map.get(key) ?? 0) + r.price_cents * (r.quantity ?? 1));
+    map.set(key, (map.get(key) ?? 0) + r.price_cents);
   }
   return [...map.entries()]
     .map(([merchant, cents]) => ({ merchant, cents }))
@@ -224,7 +225,6 @@ function bucketByMerchant(
 
 type ChartRow = {
   price_cents: number;
-  quantity: number | null;
   order_date: string;
   category: { name: string; color: string }[] | { name: string; color: string } | null;
 };
@@ -243,7 +243,7 @@ function bucketByMonth(today: string, rows: ChartRow[]) {
   for (const r of rows) {
     const key = r.order_date.slice(0, 7);
     const slot = months.find((mm) => mm.key === key);
-    if (slot) slot.cents += r.price_cents * (r.quantity ?? 1);
+    if (slot) slot.cents += r.price_cents;
   }
   return months.map(({ month, cents }) => ({ month, cents }));
 }
@@ -255,7 +255,7 @@ function bucketByCategory(rows: ChartRow[]) {
     const name = cat?.name ?? "Uncategorized";
     const color = cat?.color ?? "#6B7280";
     const cur = map.get(name) ?? { name, color, cents: 0 };
-    cur.cents += r.price_cents * (r.quantity ?? 1);
+    cur.cents += r.price_cents;
     map.set(name, cur);
   }
   return [...map.values()].sort((a, b) => b.cents - a.cents);
