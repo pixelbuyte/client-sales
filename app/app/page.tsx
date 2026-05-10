@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Mic, Sparkles, Store } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { StatCard } from "@/components/StatCard";
 import { DeadlineChip } from "@/components/DeadlineChip";
@@ -68,6 +69,11 @@ export default async function DashboardPage() {
       .gte("order_date", chartStart),
   ]);
 
+  const { data: merchantRows } = await supabase
+    .from("purchases")
+    .select("merchant, price_cents")
+    .gte("order_date", chartStart);
+
   const monthSpend = (monthRows ?? []).reduce(
     (sum, r: { price_cents: number }) => sum + r.price_cents,
     0,
@@ -84,6 +90,9 @@ export default async function DashboardPage() {
 
   const spendByMonth = bucketByMonth(today, (chartRows ?? []) as ChartRow[]);
   const byCategory = bucketByCategory((chartRows ?? []) as ChartRow[]);
+  const byMerchant = bucketByMerchant(
+    (merchantRows ?? []) as { merchant: string | null; price_cents: number }[],
+  );
 
   return (
     <>
@@ -120,18 +129,94 @@ export default async function DashboardPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <CategoryDonut data={byCategory} />
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold">Recent purchases</h2>
-            <Link href="/app/purchases" className="text-sm text-accent">View all →</Link>
-          </div>
-          <p className="mt-2 text-sm text-muted">
-            Search and filter on the purchases page.
-          </p>
-        </div>
+        <MerchantBreakdown data={byMerchant} />
       </div>
+
+      <ComingSoon />
     </>
   );
+}
+
+function MerchantBreakdown({ data }: { data: { merchant: string; cents: number }[] }) {
+  const top = data.slice(0, 6);
+  const max = top[0]?.cents ?? 0;
+  return (
+    <div className="card p-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-base font-semibold">Spend by merchant</h2>
+        <Link href="/app/receipts" className="text-sm text-accent">All receipts →</Link>
+      </div>
+      <p className="mt-1 text-xs text-muted">Last 6 months</p>
+      {top.length === 0 ? (
+        <p className="mt-4 text-sm text-muted">No merchant data yet.</p>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {top.map((m) => (
+            <li key={m.merchant} className="text-sm">
+              <div className="flex items-center justify-between">
+                <span className="truncate">{m.merchant}</span>
+                <span className="tabular-nums text-muted">{formatCents(m.cents)}</span>
+              </div>
+              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                <div
+                  className="h-full rounded-full bg-accent"
+                  style={{ width: max > 0 ? `${(m.cents / max) * 100}%` : "0%" }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function ComingSoon() {
+  const cards: { icon: typeof Mic; title: string; desc: string }[] = [
+    {
+      icon: Sparkles,
+      title: "Smart receipt parsing",
+      desc: "Retailer-specific models that decode short codes (\"GV WHL MLK\" → \"GV Whole Milk\") and tag categories automatically.",
+    },
+    {
+      icon: Store,
+      title: "Financial advisor",
+      desc: "A monthly review of your spending with concrete suggestions on where to cut and what to plan for.",
+    },
+    {
+      icon: Mic,
+      title: "Voice check-in",
+      desc: "Talk through your week or month — once every week or two — with a coach trained on your spending.",
+    },
+  ];
+  return (
+    <div className="mt-6">
+      <h2 className="text-base font-semibold">Coming soon</h2>
+      <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3">
+        {cards.map((c) => (
+          <div key={c.title} className="card relative overflow-hidden p-5 opacity-80">
+            <span className="absolute right-3 top-3 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted">
+              Soon
+            </span>
+            <c.icon className="h-5 w-5 text-accent" />
+            <h3 className="mt-3 text-sm font-semibold">{c.title}</h3>
+            <p className="mt-1 text-xs text-muted">{c.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function bucketByMerchant(rows: { merchant: string | null; price_cents: number }[]) {
+  const map = new Map<string, number>();
+  for (const r of rows) {
+    const key = r.merchant?.trim() || "Unknown";
+    map.set(key, (map.get(key) ?? 0) + r.price_cents);
+  }
+  return [...map.entries()]
+    .map(([merchant, cents]) => ({ merchant, cents }))
+    .sort((a, b) => b.cents - a.cents);
 }
 
 type ChartRow = {

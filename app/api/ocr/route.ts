@@ -11,21 +11,31 @@ export const dynamic = "force-dynamic";
 const MAX_BYTES = 10 * 1024 * 1024;
 const ACCEPTED = new Set(["image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]);
 
+const LineItemSchema = z.object({
+  name: z.string(),
+  price: z.number().nullable(),
+  quantity: z.number().int().nullable(),
+});
+
 const ReceiptSchema = z.object({
   merchant: z.string().nullable(),
-  item_name: z.string().nullable(),
-  price: z.number().nullable(),
-  currency: z.enum(["USD", "EUR", "GBP", "CAD", "AUD"]).nullable(),
   order_date: z.string().nullable(),
+  currency: z.enum(["USD", "EUR", "GBP", "CAD", "AUD"]).nullable(),
+  total: z.number().nullable(),
+  items: z.array(LineItemSchema),
 });
 
 const SYSTEM = [
   "You extract structured data from a receipt or order confirmation.",
-  "Return null for any field you can't read confidently — do not guess.",
-  "Item name: the most prominent purchased item, or a short summary if multiple line items.",
-  "Price: the total in major units (e.g. 24.99 not 2499). Numbers only.",
-  "Currency: 3-letter ISO code if visible on the receipt; null if you can't tell.",
-  "Order date: ISO 8601 (YYYY-MM-DD).",
+  "Return EVERY purchased line item — do not collapse or summarize. If the receipt has 5 lines, return 5 items.",
+  "Skip non-item lines like subtotal, tax, tip, total, change, loyalty discount, balance.",
+  "If a line clearly represents the same product purchased multiple times (e.g. '2 @ 3.99' or 'BANANA x3'), set quantity accordingly and price to the per-unit price when known, otherwise the line price.",
+  "Return null for any single field you can't read confidently — do not guess.",
+  "items[].name: human-readable product name as printed (you may expand obvious abbreviations, e.g. 'GV WHL MLK' -> 'GV Whole Milk').",
+  "items[].price: per-line price in major units (24.99 not 2499). Numbers only.",
+  "total: receipt grand total in major units.",
+  "currency: 3-letter ISO code if visible; null otherwise.",
+  "order_date: ISO 8601 (YYYY-MM-DD).",
 ].join(" ");
 
 export async function POST(req: Request) {
@@ -94,7 +104,7 @@ export async function POST(req: Request) {
   try {
     const response = await client.beta.messages.parse({
       model: "claude-opus-4-7",
-      max_tokens: 1024,
+      max_tokens: 4096,
       system: SYSTEM,
       output_config: { effort: "low" },
       output_format: betaZodOutputFormat(ReceiptSchema),

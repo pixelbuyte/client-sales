@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, ListChecks, Menu, Plus, Settings, X } from "lucide-react";
+import { LayoutDashboard, ListChecks, Menu, Plus, ReceiptText, Settings, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const items = [
   { href: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/app/purchases", label: "Purchases", icon: ListChecks },
+  { href: "/app/receipts", label: "Receipts", icon: ReceiptText },
   { href: "/app/settings", label: "Settings", icon: Settings },
 ];
 
