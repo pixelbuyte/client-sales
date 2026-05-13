@@ -279,9 +279,9 @@ export function PurchaseForm({
         }}
       />
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="font-mono text-xs text-accent">{error}</p> : null}
 
-      <div className="sticky bottom-0 -mx-8 flex items-center justify-end gap-3 border-t border-border bg-white/80 px-8 py-4 backdrop-blur">
+      <div className="sticky bottom-0 -mx-8 flex items-center justify-end gap-3 border-t border-border bg-bg/85 px-8 py-4 backdrop-blur">
         <button type="button" className="btn-secondary" onClick={() => router.back()}>
           Cancel
         </button>
@@ -393,7 +393,7 @@ function ScannedItemsPanel({
 
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs uppercase tracking-wide text-muted">
+          <thead className="bg-bg/60 font-mono text-[10px] uppercase tracking-widest text-muted">
             <tr>
               <th className="px-3 py-2 text-left">Item</th>
               <th className="px-3 py-2 text-right w-20">Qty</th>
@@ -434,7 +434,7 @@ function ScannedItemsPanel({
                     type="button"
                     onClick={() => onRemove(i)}
                     aria-label="Remove item"
-                    className="rounded-md p-1.5 text-muted hover:bg-gray-100 hover:text-red-600"
+                    className="rounded-md p-1.5 text-muted transition-colors hover:bg-bg hover:text-accent"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -443,7 +443,7 @@ function ScannedItemsPanel({
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t border-border bg-gray-50">
+            <tr className="border-t border-border bg-bg/60">
               <td className="px-3 py-2">
                 <button
                   type="button"
@@ -494,7 +494,7 @@ function ReceiptInput({
             type="button"
             onClick={onScan}
             disabled={scanning}
-            className="inline-flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent-50 px-2.5 py-1 text-xs font-medium text-accent hover:bg-indigo-100 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent-50 px-2.5 py-1 text-xs font-medium text-accent transition-colors hover:bg-accent hover:text-white disabled:opacity-50"
           >
             <Sparkles className="h-3.5 w-3.5" />
             {scanning ? "Scanning…" : "Scan with AI"}
@@ -508,7 +508,7 @@ function ReceiptInput({
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
         onChange={onChange}
-        className="mt-1.5 block w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-accent hover:file:bg-indigo-100"
+        className="mt-1.5 block w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-accent hover:file:bg-accent hover:file:text-white file:transition-colors"
       />
       <p className="mt-1 text-xs text-muted">PNG, JPG, WEBP, GIF, or PDF up to 10MB.</p>
       {scanError ? (
