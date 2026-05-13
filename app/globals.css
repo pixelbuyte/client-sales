@@ -3,29 +3,87 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+  html,
+  body {
     @apply bg-bg text-ink antialiased;
-    font-feature-settings: "cv11", "ss01";
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   }
-  input, select, textarea {
-    @apply bg-white;
+  input,
+  select,
+  textarea {
+    @apply bg-surface;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-card border border-border bg-white shadow-card;
+    @apply rounded-card border border-border bg-surface shadow-card;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-indigo-600 disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-[#C03A12] active:scale-[0.98] disabled:opacity-50;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-border bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-gray-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-all duration-150 hover:bg-bg active:scale-[0.98];
   }
   .input {
-    @apply w-full rounded-md border border-border px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20;
+    @apply w-full rounded-md border border-border bg-surface px-3 py-2.5 text-sm outline-none transition-all duration-150 focus:border-accent focus:ring-2 focus:ring-accent/15 placeholder:text-muted/50;
   }
   .label {
-    @apply mb-1.5 block text-sm font-medium text-ink;
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-widest text-muted;
   }
+}
+
+/* Hero stagger animations */
+.hero-1 {
+  opacity: 0;
+  animation: pp-fade-up 0.55s 0.05s ease-out forwards;
+}
+.hero-2 {
+  opacity: 0;
+  animation: pp-fade-up 0.55s 0.15s ease-out forwards;
+}
+.hero-3 {
+  opacity: 0;
+  animation: pp-fade-up 0.55s 0.25s ease-out forwards;
+}
+.hero-4 {
+  opacity: 0;
+  animation: pp-fade-up 0.55s 0.38s ease-out forwards;
+}
+.hero-5 {
+  opacity: 0;
+  animation: pp-fade-up 0.55s 0.52s ease-out forwards;
+}
+
+@keyframes pp-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pp-scan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(1000%);
+    opacity: 0;
+  }
+}
+
+.scan-line {
+  animation: pp-scan 2.8s ease-in-out infinite;
 }

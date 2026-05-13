@@ -24,54 +24,78 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-bg">
+      {/* Header */}
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-md bg-accent" />
-          <span className="text-base font-semibold tracking-tight">Purchase Ping</span>
+        <div className="flex items-center gap-2.5">
+          <ReceiptMark />
+          <span className="font-display text-base font-semibold tracking-tight">
+            Purchase Ping
+          </span>
         </div>
         <nav className="flex items-center gap-4 text-sm">
-          <a href="#how" className="hidden text-muted hover:text-ink sm:inline">
+          <a
+            href="#how"
+            className="hidden text-muted transition-colors hover:text-ink sm:inline"
+          >
             How it works
           </a>
-          <a href="#pricing" className="text-muted hover:text-ink">Pricing</a>
-          <Link href="/login" className="btn-secondary">Sign in</Link>
+          <a
+            href="#pricing"
+            className="text-muted transition-colors hover:text-ink"
+          >
+            Pricing
+          </a>
+          <Link href="/login" className="btn-secondary py-1.5 text-xs">
+            Sign in
+          </Link>
         </nav>
       </header>
 
+      {/* Hero */}
       <section className="mx-auto max-w-3xl px-6 pb-12 pt-16 text-center md:pt-20">
-        <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1 text-xs text-muted">
-          <Sparkles className="h-3 w-3 text-accent" />
+        <div className="hero-1 mb-6 inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent-50 px-3 py-1 text-xs font-medium text-accent">
+          <Sparkles className="h-3 w-3" />
           New: AI receipt scan on Pro
         </div>
-        <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
+        <h1 className="hero-2 font-display text-5xl font-semibold leading-[1.1] tracking-tight md:text-[62px]">
           The $200 return you forgot about?
           <br />
-          <span className="text-accent">Never again.</span>
+          <em className="not-italic text-accent">Never again.</em>
         </h1>
-        <p className="mx-auto mt-6 max-w-xl text-lg text-muted">
-          Purchase Ping is the personal dashboard for everything you buy
-          online. Track return windows, warranties, and spending in one place —
-          and get an email <strong className="text-ink">3 days before</strong> a
+        <p className="hero-3 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          Purchase Ping is the personal dashboard for everything you buy online.
+          Track return windows, warranties, and spending in one place — and get
+          an email{" "}
+          <strong className="font-medium text-ink">3 days before</strong> a
           return deadline closes.
         </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/login" className="btn-primary">
+        <div className="hero-4 mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link href="/login" className="btn-primary px-6 py-3 text-base">
             Start free — no card required
           </Link>
-          <a href="#pricing" className="text-sm text-muted hover:text-ink">
+          <a
+            href="#pricing"
+            className="text-sm text-muted transition-colors hover:text-ink"
+          >
             See pricing →
           </a>
         </div>
-        <p className="mt-4 text-xs text-muted">
+        <p className="hero-5 mt-4 text-xs text-muted">
           One missed return pays for the year of Pro.
         </p>
       </section>
 
-      {/* Visual / hero card */}
+      {/* Hero mock dashboard */}
       <section className="mx-auto max-w-5xl px-6 pb-20">
         <div className="card overflow-hidden p-2">
-          <div className="rounded-md border border-border bg-gradient-to-br from-gray-50 to-white p-8">
+          <div className="rounded-[4px] border border-border bg-bg p-8">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+                Dashboard
+              </span>
+            </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <MockStat
                 label="Returns closing soon"
@@ -98,12 +122,22 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* How it works */}
       <section id="how" className="mx-auto max-w-5xl px-6 pb-20">
-        <h2 className="mb-2 text-center text-3xl font-semibold tracking-tight">
-          What it does
+        <div className="mb-2 flex items-center justify-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+            What it does
+          </span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+        <h2 className="mb-2 text-center font-display text-3xl font-semibold tracking-tight">
+          Three things, done well.
         </h2>
-        <p className="mb-12 text-center text-muted">Three things, well.</p>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <p className="mb-12 text-center text-sm text-muted">
+          Not a budget app. Not a bank sync. Just the receipts stuff.
+        </p>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           <Feature
             icon={<Bell className="h-5 w-5" />}
             title="Returns, before they close"
@@ -122,55 +156,79 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* AI scan feature */}
       <section className="mx-auto max-w-5xl px-6 pb-20">
-        <div className="card grid grid-cols-1 gap-8 p-8 md:grid-cols-2 md:p-12">
+        <div className="card grid grid-cols-1 gap-8 overflow-hidden p-8 md:grid-cols-2 md:p-12">
           <div>
             <div className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-xs font-medium text-accent">
               <Sparkles className="h-3 w-3" />
               Pro feature
             </div>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+            <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight">
               Snap a receipt, fields fill themselves
             </h2>
-            <p className="mt-3 text-sm text-muted">
+            <p className="mt-3 text-sm leading-relaxed text-muted">
               Upload a photo or PDF and the merchant, item, price, and date
               prefill from the image. Review, save, done — typing optional.
             </p>
-            <ul className="mt-6 space-y-2 text-sm">
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <ul className="mt-6 space-y-2.5 text-sm">
+              <li className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 Works on photos, screenshots, and PDFs
               </li>
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+              <li className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 Powered by Claude vision — same AI behind this site&apos;s code
               </li>
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+              <li className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 Your receipts never train any model
               </li>
             </ul>
           </div>
-          <div className="rounded-md border border-border bg-gradient-to-br from-accent-50 to-white p-6">
+
+          {/* Scan card with animated scan line */}
+          <div className="relative overflow-hidden rounded-md border border-border bg-bg p-6">
+            {/* Animated scan line */}
+            <div className="scan-line absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+
             <div className="flex items-center justify-between text-xs text-muted">
-              <span>Receipt</span>
+              <div className="flex items-center gap-1.5">
+                <div className="h-1.5 w-1.5 rounded-full bg-accent" />
+                <span className="font-mono uppercase tracking-widest">
+                  Receipt
+                </span>
+              </div>
               <span className="rounded-full bg-accent-50 px-2 py-0.5 font-medium text-accent">
                 Scanning…
               </span>
             </div>
-            <div className="mt-4 space-y-2 text-sm">
+            <div className="mt-5 space-y-2.5 text-sm">
               <FillRow label="Item" value="AirPods Pro (2nd gen)" />
               <FillRow label="Merchant" value="Apple" />
               <FillRow label="Price" value="$249.00" />
               <FillRow label="Date" value="Dec 15, 2024" />
             </div>
+
+            {/* Decorative receipt bottom serration */}
+            <div className="mt-6 flex gap-1">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-1.5 flex-1 rounded-full bg-border"
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="pricing" className="border-t border-border bg-gray-50/40 py-20">
+      {/* Pricing */}
+      <section id="pricing" className="border-t border-border py-20">
         <div className="mx-auto max-w-3xl px-6">
-          <h2 className="text-center text-3xl font-semibold tracking-tight">Pricing</h2>
+          <h2 className="text-center font-display text-3xl font-semibold tracking-tight">
+            Pricing
+          </h2>
           <p className="mt-2 text-center text-sm text-muted">
             Start free. Upgrade when reminders pay for themselves.
           </p>
@@ -208,12 +266,15 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
       <section className="mx-auto max-w-3xl px-6 py-20">
-        <h2 className="text-center text-3xl font-semibold tracking-tight">FAQ</h2>
-        <div className="mt-10 space-y-6">
+        <h2 className="text-center font-display text-3xl font-semibold tracking-tight">
+          FAQ
+        </h2>
+        <div className="mt-10 space-y-3">
           <Faq
             q="Is this a budgeting app?"
-            a="No. There&apos;s no budget setting, no goals, no shame messages. It tracks what you bought and when things expire. The chart is for awareness, not enforcement."
+            a="No. There's no budget setting, no goals, no shame messages. It tracks what you bought and when things expire. The chart is for awareness, not enforcement."
           />
           <Faq
             q="Do you sync with my bank or Gmail?"
@@ -221,7 +282,7 @@ export default function LandingPage() {
           />
           <Faq
             q="What happens if I miss the email reminder?"
-            a="We email 3 days before the deadline (Pro). The deadline also shows on your dashboard with a colored countdown chip — red ≤3 days, amber ≤7 days, gray otherwise. You can&apos;t miss it unless you really try."
+            a="We email 3 days before the deadline (Pro). The deadline also shows on your dashboard with a colored countdown chip — red ≤3 days, amber ≤7 days, gray otherwise. You can't miss it unless you really try."
           />
           <Faq
             q="What if I cancel?"
@@ -238,25 +299,53 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 text-center text-xs text-muted">
-        <div className="flex items-center justify-center gap-4">
-          <Link href="/privacy" className="hover:text-ink">Privacy</Link>
-          <Link href="/terms" className="hover:text-ink">Terms</Link>
+      <footer className="border-t border-border py-8 text-center">
+        <div className="flex items-center justify-center gap-4 text-xs text-muted">
+          <Link href="/privacy" className="transition-colors hover:text-ink">
+            Privacy
+          </Link>
+          <Link href="/terms" className="transition-colors hover:text-ink">
+            Terms
+          </Link>
         </div>
-        <div className="mt-2">© {new Date().getFullYear()} Purchase Ping</div>
+        <div className="mt-2 font-mono text-[11px] text-muted/60">
+          © {new Date().getFullYear()} Purchase Ping
+        </div>
       </footer>
     </main>
   );
 }
 
-function Feature({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
+function ReceiptMark() {
   return (
-    <div className="card p-6">
+    <div className="flex h-7 w-7 flex-col items-center justify-center gap-0.5 rounded-md bg-accent px-1.5">
+      {[100, 70, 85, 55].map((w, i) => (
+        <div
+          key={i}
+          className="h-[2px] rounded-full bg-white/80"
+          style={{ width: `${w}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Feature({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="card p-6 transition-shadow duration-200 hover:shadow-card-hover">
       <div className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-accent-50 text-accent">
         {icon}
       </div>
-      <h3 className="mt-4 text-base font-semibold">{title}</h3>
-      <p className="mt-2 text-sm text-muted">{body}</p>
+      <h3 className="mt-4 font-display text-base font-semibold">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
     </div>
   );
 }
@@ -281,37 +370,77 @@ function PricingCard({
   note?: string;
 }) {
   return (
-    <div className={"card p-6 " + (highlighted ? "border-accent ring-1 ring-accent" : "")}>
-      <div className="text-sm text-muted">{name}</div>
-      <div className="mt-2 flex items-baseline gap-1">
-        <span className="text-4xl font-semibold tracking-tight">{price}</span>
-        <span className="text-sm text-muted">{cadence}</span>
+    <div
+      className={
+        highlighted
+          ? "card overflow-hidden border-accent/40 ring-1 ring-accent/20"
+          : "card overflow-hidden"
+      }
+    >
+      {/* Receipt-style header strip for Pro */}
+      {highlighted && (
+        <div className="flex items-center justify-between border-b border-dashed border-accent/25 bg-accent-50/60 px-6 py-2.5">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
+            {name} Plan
+          </span>
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-1 w-1 rounded-full bg-accent/40"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="p-6">
+        {!highlighted && (
+          <div className="mb-3 font-mono text-xs uppercase tracking-widest text-muted">
+            {name}
+          </div>
+        )}
+        <div className="flex items-baseline gap-1">
+          <span className="font-mono text-4xl font-medium tracking-tight">
+            {price}
+          </span>
+          <span className="text-sm text-muted">{cadence}</span>
+        </div>
+        <p className="mt-2 text-sm text-muted">{tagline}</p>
+
+        <ul className="mt-5 space-y-2.5 text-sm">
+          {features.map((f) => (
+            <li key={f} className="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          href="/login"
+          className={highlighted ? "btn-primary mt-6 w-full" : "btn-secondary mt-6 w-full"}
+        >
+          {cta}
+        </Link>
+        {note ? (
+          <p className="mt-3 text-center font-mono text-[10px] text-muted">
+            {note}
+          </p>
+        ) : null}
       </div>
-      <p className="mt-2 text-sm text-muted">{tagline}</p>
-      <ul className="mt-5 space-y-2 text-sm">
-        {features.map((f) => (
-          <li key={f} className="flex items-start gap-2">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
-      <Link
-        href="/login"
-        className={highlighted ? "btn-primary mt-6 w-full" : "btn-secondary mt-6 w-full"}
-      >
-        {cta}
-      </Link>
-      {note ? <p className="mt-3 text-center text-xs text-muted">{note}</p> : null}
     </div>
   );
 }
 
 function Faq({ q, a }: { q: string; a: string }) {
   return (
-    <details className="card p-5">
-      <summary className="cursor-pointer text-sm font-medium">{q}</summary>
-      <p className="mt-3 text-sm text-muted">{a}</p>
+    <details className="group card px-5 py-4">
+      <summary className="cursor-pointer list-none text-sm font-medium transition-colors group-open:text-accent">
+        <span className="mr-2 font-mono text-accent">+</span>
+        {q}
+      </summary>
+      <p className="mt-3 text-sm leading-relaxed text-muted">{a}</p>
     </details>
   );
 }
@@ -328,24 +457,35 @@ function MockStat({
   rows?: Array<[string, string, string, "red" | "amber" | "gray"]>;
 }) {
   const tones = {
-    red: "bg-red-50 text-red-700",
-    amber: "bg-amber-50 text-amber-800",
-    gray: "bg-gray-100 text-gray-700",
+    red: "bg-accent-50 text-accent",
+    amber: "bg-warning-50 text-warning",
+    gray: "bg-bg text-muted",
   };
   return (
-    <div className="rounded-md border border-border bg-white p-4">
-      <div className="text-xs text-muted">{label}</div>
-      <div className="mt-1.5 text-2xl font-semibold tracking-tight">{value}</div>
-      <div className="text-xs text-muted">{sub}</div>
+    <div className="rounded-[4px] border border-border bg-surface p-4">
+      <div className="font-mono text-[10px] uppercase tracking-widest text-muted">
+        {label}
+      </div>
+      <div className="mt-2 font-mono text-2xl font-medium tracking-tight">
+        {value}
+      </div>
+      <div className="font-mono text-[10px] text-muted">{sub}</div>
       {rows ? (
         <div className="mt-3 space-y-1.5 border-t border-border pt-3">
           {rows.map(([title, sub, days, tone]) => (
             <div key={title} className="flex items-center justify-between text-xs">
               <div className="min-w-0">
                 <div className="truncate">{title}</div>
-                <div className="truncate text-[10px] text-muted">{sub}</div>
+                <div className="truncate font-mono text-[10px] text-muted">
+                  {sub}
+                </div>
               </div>
-              <span className={"rounded-full px-2 py-0.5 text-[10px] font-medium " + tones[tone]}>
+              <span
+                className={
+                  "rounded-full px-2 py-0.5 font-mono text-[10px] font-medium " +
+                  tones[tone]
+                }
+              >
                 {days} left
               </span>
             </div>
@@ -358,10 +498,11 @@ function MockStat({
 
 function FillRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-md border border-border bg-white px-3 py-2">
-      <span className="text-xs text-muted">{label}</span>
+    <div className="flex items-center justify-between rounded-[4px] border border-border bg-surface px-3 py-2">
+      <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+        {label}
+      </span>
       <span className="font-medium">{value}</span>
     </div>
   );
 }
-
