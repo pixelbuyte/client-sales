@@ -233,14 +233,14 @@ function MerchantBreakdown({
 function ComingSoon() {
   const cards: { icon: typeof Mic; title: string; desc: string }[] = [
     {
-      icon: ImageIcon,
-      title: "Auto product photos",
-      desc: "Each line item gets a real product image next to its name — auto-fetched from the merchant or a product database.",
-    },
-    {
       icon: Sparkles,
       title: "Smart retailer parsing",
       desc: "Retailer-specific decoders that expand short codes (\"GV WHL MLK\" → \"GV Whole Milk\") and detect restaurants vs groceries vs gas.",
+    },
+    {
+      icon: ImageIcon,
+      title: "Sharper product photos",
+      desc: "Auto-fetched images today come from Open Food Facts plus merchant logos. Next: vision-based recognition for non-grocery items.",
     },
     {
       icon: Store,

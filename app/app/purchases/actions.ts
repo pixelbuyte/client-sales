@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { parseDollarsToCents } from "@/lib/format";
+import { findProductImage } from "@/lib/product-image";
 
 const FREE_TIER_LIMIT = 10;
 
@@ -62,6 +63,7 @@ export async function createPurchase(formData: FormData) {
   if (priceCents <= 0) throw new Error("Price must be greater than 0.");
 
   const categoryId = s(formData.get("category_id"));
+  const merchantName = s(formData.get("merchant"));
   const insert: {
     user_id: string;
     item_name: string;
@@ -74,10 +76,11 @@ export async function createPurchase(formData: FormData) {
     warranty_end: string | null;
     notes: string | null;
     receipt_path: string | null;
+    image_url: string | null;
   } = {
     user_id: user.id,
     item_name: itemName,
-    merchant: s(formData.get("merchant")),
+    merchant: merchantName,
     order_date: orderDate,
     price_cents: priceCents,
     currency: s(formData.get("currency")) ?? "USD",
@@ -86,6 +89,7 @@ export async function createPurchase(formData: FormData) {
     warranty_end: s(formData.get("warranty_end")),
     notes: s(formData.get("notes")),
     receipt_path: null,
+    image_url: await findProductImage(itemName, merchantName).catch(() => null),
   };
 
   const receipt = formData.get("receipt") as File | null;
@@ -181,7 +185,16 @@ export async function createReceipt(formData: FormData) {
     .single();
   if (rErr || !receiptRow) throw new Error(rErr?.message ?? "Failed to create receipt.");
 
-  const purchaseRows = items.map((it) => ({
+  // Lookup product images in parallel. Each lookup is best-effort with a
+  // short timeout, and any individual failure resolves to null rather
+  // than aborting the save.
+  const images = await Promise.all(
+    items.map((it) =>
+      findProductImage(it.name, merchant).catch(() => null),
+    ),
+  );
+
+  const purchaseRows = items.map((it, i) => ({
     user_id: user.id,
     receipt_id: receiptRow.id,
     item_name: it.name,
@@ -192,6 +205,7 @@ export async function createReceipt(formData: FormData) {
     category_id: categoryId,
     quantity: it.quantity,
     receipt_path: receiptPath,
+    image_url: images[i],
   }));
 
   const { error: pErr } = await supabase.from("purchases").insert(purchaseRows);
