@@ -36,6 +36,12 @@ export default async function DashboardPage() {
   const chartStartMonth = Number(mStr) - 5;
   const chartStartDate = new Date(Date.UTC(chartStartYear, chartStartMonth - 1, 1));
   const chartStart = `${chartStartDate.getUTCFullYear()}-${String(chartStartDate.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  // Week starts Monday. addDaysISO with a negative offset gives us the
+  // Monday of the current ISO week regardless of runtime timezone.
+  const [tY, tM, tD] = today.split("-").map(Number);
+  const todayDow = new Date(Date.UTC(tY, tM - 1, tD)).getUTCDay();
+  const mondayOffset = todayDow === 0 ? -6 : 1 - todayDow;
+  const weekStart = addDaysISO(today, mondayOffset);
 
   const [
     { count: total },
@@ -74,6 +80,11 @@ export default async function DashboardPage() {
     .select("merchant, price_cents")
     .gte("order_date", chartStart);
 
+  const { data: weekRows } = await supabase
+    .from("purchases")
+    .select("merchant, price_cents")
+    .gte("order_date", weekStart);
+
   // NOTE: dashboard aggregations sum price_cents only and ignore
   // `quantity` until we audit legacy rows where price_cents may have been
   // stored as the line total (#12). Once verified, switch back to
@@ -97,11 +108,14 @@ export default async function DashboardPage() {
   const byMerchant = bucketByMerchant(
     (merchantRows ?? []) as { merchant: string | null; price_cents: number }[],
   );
+  const weekRowsSafe = (weekRows ?? []) as { merchant: string | null; price_cents: number }[];
+  const weekSpend = weekRowsSafe.reduce((sum, r) => sum + r.price_cents, 0);
+  const byMerchantWeek = bucketByMerchant(weekRowsSafe);
 
   return (
     <>
       <Header />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Returns closing soon"
           value={(returns ?? []).length}
@@ -121,6 +135,11 @@ export default async function DashboardPage() {
           ))}
         </StatCard>
         <StatCard
+          label="This week"
+          value={formatCents(weekSpend)}
+          sub={`${weekRowsSafe.length} purchase${weekRowsSafe.length === 1 ? "" : "s"} since Mon`}
+        />
+        <StatCard
           label="This month"
           value={formatCents(monthSpend)}
           sub={`${(monthRows ?? []).length} purchases`}
@@ -133,7 +152,20 @@ export default async function DashboardPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <CategoryDonut data={byCategory} />
-        <MerchantBreakdown data={byMerchant} />
+        <MerchantBreakdown
+          data={byMerchant}
+          title="Spend by merchant"
+          subtitle="Last 6 months"
+        />
+      </div>
+
+      <div className="mt-6">
+        <MerchantBreakdown
+          data={byMerchantWeek}
+          title="Spend by merchant — this week"
+          subtitle="Since Monday"
+          emptyLabel="No spend this week yet."
+        />
       </div>
 
       <ComingSoon />
@@ -141,18 +173,28 @@ export default async function DashboardPage() {
   );
 }
 
-function MerchantBreakdown({ data }: { data: { merchant: string; cents: number }[] }) {
+function MerchantBreakdown({
+  data,
+  title,
+  subtitle,
+  emptyLabel,
+}: {
+  data: { merchant: string; cents: number }[];
+  title: string;
+  subtitle: string;
+  emptyLabel?: string;
+}) {
   const top = data.slice(0, 6);
   const max = top[0]?.cents ?? 0;
   return (
     <div className="card p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold">Spend by merchant</h2>
+        <h2 className="text-base font-semibold">{title}</h2>
         <Link href="/app/receipts" className="text-sm text-accent">All receipts →</Link>
       </div>
-      <p className="mt-1 text-xs text-muted">Last 6 months</p>
+      <p className="mt-1 text-xs text-muted">{subtitle}</p>
       {top.length === 0 ? (
-        <p className="mt-4 text-sm text-muted">No merchant data yet.</p>
+        <p className="mt-4 text-sm text-muted">{emptyLabel ?? "No merchant data yet."}</p>
       ) : (
         <ul className="mt-4 space-y-3">
           {top.map((m) => (
