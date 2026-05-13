@@ -75,6 +75,7 @@ create table if not exists purchases (
   notes text,
   receipt_url text,
   receipt_path text,
+  image_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

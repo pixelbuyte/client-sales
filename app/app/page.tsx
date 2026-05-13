@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mic, Sparkles, Store } from "lucide-react";
+import { Image as ImageIcon, Mic, Sparkles, Store } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { StatCard } from "@/components/StatCard";
 import { DeadlineChip } from "@/components/DeadlineChip";
@@ -189,24 +189,37 @@ function MerchantBreakdown({
   return (
     <div className="card p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold">{title}</h2>
-        <Link href="/app/receipts" className="text-sm text-accent">All receipts →</Link>
+        <h2 className="font-display text-base font-semibold">{title}</h2>
+        <Link
+          href="/app/receipts"
+          className="font-mono text-[10px] uppercase tracking-widest text-accent transition-colors hover:text-ink"
+        >
+          All →
+        </Link>
       </div>
-      <p className="mt-1 text-xs text-muted">{subtitle}</p>
+      <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted">
+        {subtitle}
+      </p>
       {top.length === 0 ? (
-        <p className="mt-4 text-sm text-muted">{emptyLabel ?? "No merchant data yet."}</p>
+        <p className="mt-4 text-sm text-muted">
+          {emptyLabel ?? "No merchant data yet."}
+        </p>
       ) : (
         <ul className="mt-4 space-y-3">
           {top.map((m) => (
             <li key={m.merchant} className="text-sm">
               <div className="flex items-center justify-between">
                 <span className="truncate">{m.merchant}</span>
-                <span className="tabular-nums text-muted">{formatCents(m.cents)}</span>
+                <span className="font-mono tabular-nums text-muted">
+                  {formatCents(m.cents)}
+                </span>
               </div>
-              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+              <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-border/60">
                 <div
-                  className="h-full rounded-full bg-accent"
-                  style={{ width: max > 0 ? `${(m.cents / max) * 100}%` : "0%" }}
+                  className="h-full rounded-full bg-accent transition-all duration-500"
+                  style={{
+                    width: max > 0 ? `${(m.cents / max) * 100}%` : "0%",
+                  }}
                 />
               </div>
             </li>
@@ -220,33 +233,49 @@ function MerchantBreakdown({
 function ComingSoon() {
   const cards: { icon: typeof Mic; title: string; desc: string }[] = [
     {
+      icon: ImageIcon,
+      title: "Auto product photos",
+      desc: "Each line item gets a real product image next to its name — auto-fetched from the merchant or a product database.",
+    },
+    {
       icon: Sparkles,
-      title: "Smart receipt parsing",
-      desc: "Retailer-specific models that decode short codes (\"GV WHL MLK\" → \"GV Whole Milk\") and tag categories automatically.",
+      title: "Smart retailer parsing",
+      desc: "Retailer-specific decoders that expand short codes (\"GV WHL MLK\" → \"GV Whole Milk\") and detect restaurants vs groceries vs gas.",
     },
     {
       icon: Store,
       title: "Financial advisor",
-      desc: "A monthly review of your spending with concrete suggestions on where to cut and what to plan for.",
+      desc: "A monthly review trained on your spending — concrete suggestions on where to cut, plus warnings before recurring charges grow.",
     },
     {
       icon: Mic,
       title: "Voice check-in",
-      desc: "Talk through your week or month — once every week or two — with a coach trained on your spending.",
+      desc: "Talk through your week or month — once every week or two — with a coach trained on your purchase history.",
     },
   ];
   return (
-    <div className="mt-6">
-      <h2 className="text-base font-semibold">Coming soon</h2>
-      <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="mt-8">
+      <div className="mb-3 flex items-center gap-3">
+        <h2 className="font-display text-base font-semibold">Coming soon</h2>
+        <div className="h-px flex-1 bg-border" />
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+          Roadmap
+        </span>
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {cards.map((c) => (
-          <div key={c.title} className="card relative overflow-hidden p-5 opacity-80">
-            <span className="absolute right-3 top-3 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted">
+          <div
+            key={c.title}
+            className="card relative overflow-hidden p-5 opacity-90 transition-opacity hover:opacity-100"
+          >
+            <span className="absolute right-3 top-3 rounded-full bg-accent-50 px-2 py-0.5 font-mono text-[9px] font-medium uppercase tracking-widest text-accent">
               Soon
             </span>
             <c.icon className="h-5 w-5 text-accent" />
-            <h3 className="mt-3 text-sm font-semibold">{c.title}</h3>
-            <p className="mt-1 text-xs text-muted">{c.desc}</p>
+            <h3 className="mt-3 font-display text-sm font-semibold">
+              {c.title}
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-muted">{c.desc}</p>
           </div>
         ))}
       </div>
@@ -306,8 +335,13 @@ function bucketByCategory(rows: ChartRow[]) {
 function Header() {
   return (
     <div className="mb-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-      <p className="text-sm text-muted">{fmtDate(todayISO())}</p>
+      <div className="font-mono text-[10px] uppercase tracking-widest text-muted">
+        Overview
+      </div>
+      <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight">
+        Dashboard
+      </h1>
+      <p className="mt-1 font-mono text-xs text-muted">{fmtDate(todayISO())}</p>
     </div>
   );
 }
