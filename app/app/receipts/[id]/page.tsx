@@ -95,8 +95,14 @@ export default async function ReceiptDetailPage({ params }: { params: { id: stri
               const cat = Array.isArray(it.category) ? it.category[0] ?? null : it.category;
               return (
                 <li key={it.id} className="flex items-center gap-4 px-5 py-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gray-100 text-muted">
+                  <div
+                    className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gray-100 text-muted"
+                    title="Product photos coming soon"
+                  >
                     <ShoppingBag className="h-4 w-4" />
+                    <span className="absolute -bottom-1 -right-1 rounded-full bg-accent-50 px-1 py-px text-[8px] font-medium uppercase tracking-wide text-accent">
+                      Soon
+                    </span>
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="truncate font-medium">{it.item_name}</div>
