@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductThumb } from "@/components/ProductThumb";
+import {
+  MerchantSenseShowcase,
+  ReceiptDecodeShowcase,
+} from "@/components/ReceiptDecodeShowcase";
 import { Bell, Check, LineChart, ShieldCheck, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -154,6 +158,38 @@ export default function LandingPage() {
             title="Spending without judgment"
             body="Six-month chart, category breakdown, searchable history. Not a budgeting app — just clarity about what you bought."
           />
+        </div>
+      </section>
+
+
+      {/* Receipt decode — visual, not walls of text */}
+      <section className="mx-auto max-w-5xl px-6 pb-20">
+        <div className="mb-8 flex items-center justify-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+            Smart parsing
+          </span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="card overflow-hidden p-8">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">
+              We speak receipt.
+            </h2>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted">
+              Codes in → clarity out
+            </p>
+            <ReceiptDecodeShowcase />
+          </div>
+          <div className="card overflow-hidden p-8">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">
+              We know where you shopped.
+            </h2>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted">
+              Grocery · retail · restaurant · gas
+            </p>
+            <MerchantSenseShowcase />
+          </div>
         </div>
       </section>
 

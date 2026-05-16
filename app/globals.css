@@ -87,3 +87,8 @@
 .scan-line {
   animation: pp-scan 2.8s ease-in-out infinite;
 }
+
+.decode-row {
+  opacity: 0;
+  animation: pp-fade-up 0.5s ease-out forwards;
+}
