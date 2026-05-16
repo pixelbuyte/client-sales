@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Image as ImageIcon, Mic, Sparkles, Store } from "lucide-react";
+import { Mic, Store } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { StatCard } from "@/components/StatCard";
 import { DeadlineChip } from "@/components/DeadlineChip";
@@ -231,35 +231,16 @@ function MerchantBreakdown({
 }
 
 function ComingSoon() {
-  const cards: {
-    icon: typeof Mic;
-    title: string;
-    desc: string;
-    badge: "Soon" | "Live";
-  }[] = [
-    {
-      icon: Sparkles,
-      title: "Smart retailer parsing",
-      desc: "Retailer-specific decoders that expand short codes (\"GV WHL MLK\" → \"Great Value Whole Milk\") and detect restaurants vs groceries vs gas.",
-      badge: "Live",
-    },
-    {
-      icon: ImageIcon,
-      title: "Sharper product photos",
-      desc: "Auto-fetched images today come from Open Food Facts plus merchant logos. Next: vision-based recognition for non-grocery items.",
-      badge: "Live",
-    },
+  const cards: { icon: typeof Mic; title: string; desc: string }[] = [
     {
       icon: Store,
       title: "Financial advisor",
       desc: "A monthly review trained on your spending — concrete suggestions on where to cut, plus warnings before recurring charges grow.",
-      badge: "Soon",
     },
     {
       icon: Mic,
       title: "Voice check-in",
       desc: "Talk through your week or month — once every week or two — with a coach trained on your purchase history.",
-      badge: "Soon",
     },
   ];
   return (
@@ -271,20 +252,14 @@ function ComingSoon() {
           Roadmap
         </span>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {cards.map((c) => (
           <div
             key={c.title}
             className="card relative overflow-hidden p-5 opacity-90 transition-opacity hover:opacity-100"
           >
-            <span
-              className={
-                c.badge === "Live"
-                  ? "absolute right-3 top-3 rounded-full bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-medium uppercase tracking-widest text-emerald-700"
-                  : "absolute right-3 top-3 rounded-full bg-accent-50 px-2 py-0.5 font-mono text-[9px] font-medium uppercase tracking-widest text-accent"
-              }
-            >
-              {c.badge}
+            <span className="absolute right-3 top-3 rounded-full bg-accent-50 px-2 py-0.5 font-mono text-[9px] font-medium uppercase tracking-widest text-accent">
+              Soon
             </span>
             <c.icon className="h-5 w-5 text-accent" />
             <h3 className="mt-3 font-display text-sm font-semibold">
