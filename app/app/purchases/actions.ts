@@ -106,6 +106,7 @@ const ItemsSchema = z.array(
     name: z.string().min(1).max(200),
     price: z.string(),
     quantity: z.string().optional(),
+    image_url: z.string().url().nullable().optional(),
   }),
 );
 
@@ -138,6 +139,7 @@ export async function createReceipt(formData: FormData) {
       name: it.name.trim(),
       price_cents: parseDollarsToCents(it.price),
       quantity: Math.max(1, Math.floor(Number(it.quantity ?? "1") || 1)),
+      image_url: it.image_url ?? null,
     }))
     .filter((it) => it.name.length > 0 && it.price_cents > 0);
 
@@ -192,6 +194,7 @@ export async function createReceipt(formData: FormData) {
     category_id: categoryId,
     quantity: it.quantity,
     receipt_path: receiptPath,
+    image_url: it.image_url,
   }));
 
   const { error: pErr } = await supabase.from("purchases").insert(purchaseRows);

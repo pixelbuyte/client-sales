@@ -11,7 +11,12 @@ type Currency = "USD" | "EUR" | "GBP" | "CAD" | "AUD";
 
 const CURRENCIES: Currency[] = ["USD", "EUR", "GBP", "CAD", "AUD"];
 
-type ScannedItem = { name: string; price: string; quantity: string };
+type ScannedItem = {
+  name: string;
+  price: string;
+  quantity: string;
+  image_url: string | null;
+};
 
 export function PurchaseForm({
   categories,
@@ -72,8 +77,21 @@ export function PurchaseForm({
         onOrderDateChange(body.order_date);
       }
 
-      const items: { name: string; price: number | null; quantity: number | null }[] =
-        Array.isArray(body.items) ? body.items : [];
+      const items: {
+        name: string;
+        price: number | null;
+        quantity: number | null;
+        image_url?: string | null;
+      }[] = Array.isArray(body.items) ? body.items : [];
+
+      // Auto-pick a matching category when the form's category is still
+      // empty and the OCR suggested one (e.g. grocery -> "Groceries").
+      if (!categoryId && typeof body.suggested_category === "string") {
+        const match = categories.find(
+          (c) => c.name.toLowerCase() === body.suggested_category.toLowerCase(),
+        );
+        if (match) setCategoryId(match.id);
+      }
 
       if (items.length > 1) {
         setScannedItems(
@@ -81,6 +99,7 @@ export function PurchaseForm({
             name: it.name ?? "",
             price: typeof it.price === "number" ? it.price.toFixed(2) : "",
             quantity: it.quantity && it.quantity > 1 ? String(it.quantity) : "1",
+            image_url: it.image_url ?? null,
           })),
         );
         setScanFilled(true);
@@ -136,7 +155,10 @@ export function PurchaseForm({
     setScannedItems(next.length === 0 ? null : next);
   }
   function addItem() {
-    setScannedItems([...(scannedItems ?? []), { name: "", price: "", quantity: "1" }]);
+    setScannedItems([
+      ...(scannedItems ?? []),
+      { name: "", price: "", quantity: "1", image_url: null },
+    ]);
   }
 
   const itemsTotal = (scannedItems ?? []).reduce((sum, it) => {
