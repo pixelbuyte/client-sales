@@ -46,16 +46,6 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  // Pro-only feature.
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("plan")
-    .eq("id", user.id)
-    .single();
-  if ((profile?.plan ?? "free") !== "pro") {
-    return NextResponse.json({ error: "Pro plan required for AI receipt scan." }, { status: 402 });
-  }
-
   let form: FormData;
   try {
     form = await req.formData();

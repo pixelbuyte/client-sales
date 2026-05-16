@@ -8,19 +8,15 @@ export const dynamic = "force-dynamic";
 
 export default async function NewPurchasePage() {
   const supabase = createClient();
-  const [{ data: categories }, { data: { user } }] = await Promise.all([
-    supabase.from("categories").select("id, name").order("name"),
-    supabase.auth.getUser(),
-  ]);
-  const { data: profile } = user
-    ? await supabase.from("profiles").select("plan").eq("id", user.id).single()
-    : { data: null };
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("id, name")
+    .order("name");
 
-  // OCR is gated by both Pro plan and a configured ANTHROPIC_API_KEY.
-  // Rendering the button only when both are true keeps free users from
-  // seeing a teaser they can't use, and avoids 500s on misconfigured
-  // deployments.
-  const showOcr = ocrEnabled() && profile?.plan === "pro";
+  // OCR shows for any signed-in user as long as ANTHROPIC_API_KEY is set.
+  // (Pro gating was removed so the scan-and-autofill flow isn't silently
+  // missing for free users.)
+  const showOcr = ocrEnabled();
 
   return (
     <>
