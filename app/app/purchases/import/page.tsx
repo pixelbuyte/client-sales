@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 const SAMPLE = `item_name,merchant,order_date,price,currency,category,return_deadline,warranty_end,notes
 AirPods Pro,Apple,2024-12-15,249.00,USD,Electronics,2025-01-14,2025-12-15,Christmas gift
 Standing desk,Fully,2024-09-03,899.00,USD,Home,2024-10-03,2031-09-03,
-Hoka Clifton 9,Hoka,2025-02-20,145.00,USD,Clothing,2025-03-22,,
+Nike Air Max,Nike,2025-02-20,145.00,USD,Clothing,2025-03-22,,
 `;
 
 export default function ImportPage() {

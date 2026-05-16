@@ -13,12 +13,13 @@ const SAMPLES: Array<{
   daysAgo: number;
   returnDays: number | null;
   warrantyDays: number | null;
+  image_url: string | null;
 }> = [
-  { item_name: "AirPods Pro", merchant: "Apple", category_name: "Electronics", price_cents: 24900, daysAgo: 4, returnDays: 30, warrantyDays: 365 },
-  { item_name: "Standing desk", merchant: "Fully", category_name: "Home", price_cents: 89900, daysAgo: 22, returnDays: 30, warrantyDays: 365 * 7 },
-  { item_name: "Hoka Clifton 9", merchant: "Hoka", category_name: "Clothing", price_cents: 14500, daysAgo: 6, returnDays: 30, warrantyDays: null },
-  { item_name: "Vitamin D3", merchant: "Thorne", category_name: "Health", price_cents: 2999, daysAgo: 11, returnDays: null, warrantyDays: null },
-  { item_name: "Allbirds runners", merchant: "Allbirds", category_name: "Clothing", price_cents: 12000, daysAgo: 2, returnDays: 30, warrantyDays: null },
+  { item_name: "AirPods Pro", merchant: "Apple", category_name: "Electronics", price_cents: 24900, daysAgo: 4, returnDays: 30, warrantyDays: 365, image_url: "/products/airpods-pro.jpg" },
+  { item_name: "Nike Air Max", merchant: "Nike", category_name: "Clothing", price_cents: 17000, daysAgo: 6, returnDays: 30, warrantyDays: null, image_url: "/products/nike-air-max.jpg" },
+  { item_name: "Organic blueberries", merchant: "Whole Foods", category_name: "Groceries", price_cents: 899, daysAgo: 2, returnDays: null, warrantyDays: null, image_url: "/products/whole-foods.png" },
+  { item_name: "Standing desk", merchant: "Fully", category_name: "Home", price_cents: 89900, daysAgo: 22, returnDays: 30, warrantyDays: 365 * 7, image_url: null },
+  { item_name: "Vitamin D3", merchant: "Thorne", category_name: "Health", price_cents: 2999, daysAgo: 11, returnDays: null, warrantyDays: null, image_url: null },
 ];
 
 export async function seedSamples() {
@@ -54,6 +55,7 @@ export async function seedSamples() {
     warranty_end:
       s.warrantyDays !== null ? addDaysISO(today, s.warrantyDays - s.daysAgo) : null,
     notes: "Sample purchase",
+    image_url: s.image_url,
   }));
 
   const { error } = await supabase.from("purchases").insert(rows);

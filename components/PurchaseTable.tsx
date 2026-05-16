@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DeadlineChip } from "@/components/DeadlineChip";
+import { ProductThumb } from "@/components/ProductThumb";
 import { daysUntil, fmtDate } from "@/lib/dates";
 import { formatCents } from "@/lib/format";
 
@@ -13,6 +14,7 @@ type Row = {
   return_deadline: string | null;
   warranty_end: string | null;
   receipt_url: string | null;
+  image_url: string | null;
   category: { name: string; color: string } | null;
 };
 
@@ -45,17 +47,27 @@ export function PurchaseTable({ rows }: { rows: Row[] }) {
             {rows.map((p) => (
               <tr key={p.id} className="border-t border-border hover:bg-accent-50/40">
                 <td className="px-4 py-3">
-                  <div className="font-medium">{p.item_name}</div>
-                  {p.receipt_url ? (
-                    <a
-                      href={p.receipt_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-accent"
-                    >
-                      receipt
-                    </a>
-                  ) : null}
+                  <div className="flex items-center gap-3">
+                    <ProductThumb
+                      imageUrl={p.image_url}
+                      name={p.item_name}
+                      color={p.category?.color}
+                      size="sm"
+                    />
+                    <div className="min-w-0">
+                      <div className="font-medium">{p.item_name}</div>
+                      {p.receipt_url ? (
+                        <a
+                          href={p.receipt_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-accent"
+                        >
+                          receipt
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-muted">{p.merchant ?? "—"}</td>
                 <td className="px-4 py-3 text-muted">{fmtDate(p.order_date)}</td>

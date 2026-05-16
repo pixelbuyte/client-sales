@@ -106,7 +106,10 @@ const ItemsSchema = z.array(
     name: z.string().min(1).max(200),
     price: z.string(),
     quantity: z.string().optional(),
-    image_url: z.string().url().nullable().optional(),
+    image_url: z
+      .union([z.string().url(), z.string().regex(/^\/products\//)])
+      .nullable()
+      .optional(),
   }),
 );
 

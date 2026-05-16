@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ProductThumb } from "@/components/ProductThumb";
 import { Bell, Check, LineChart, ShieldCheck, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -102,15 +103,15 @@ export default function LandingPage() {
                 value="2"
                 sub="next 14 days"
                 rows={[
-                  ["AirPods Pro", "Apple", "3d", "red"],
-                  ["Hoka Clifton 9", "Hoka", "11d", "gray"],
+                  ["AirPods Pro", "Apple", "3d", "red", "/products/airpods-pro.jpg"],
+                  ["Nike Air Max", "Nike", "11d", "gray", "/products/nike-air-max.jpg"],
                 ]}
               />
               <MockStat
                 label="Warranties ending"
                 value="1"
                 sub="next 30 days"
-                rows={[["Standing desk", "Fully", "22d", "amber"]]}
+                rows={[["Organic blueberries", "Whole Foods", "22d", "amber", "/products/whole-foods.png"]]}
               />
               <MockStat
                 label="This month"
@@ -454,7 +455,7 @@ function MockStat({
   label: string;
   value: string;
   sub: string;
-  rows?: Array<[string, string, string, "red" | "amber" | "gray"]>;
+  rows?: Array<[string, string, string, "red" | "amber" | "gray", string?]>;
 }) {
   const tones = {
     red: "bg-accent-50 text-accent",
@@ -472,12 +473,17 @@ function MockStat({
       <div className="font-mono text-[10px] text-muted">{sub}</div>
       {rows ? (
         <div className="mt-3 space-y-1.5 border-t border-border pt-3">
-          {rows.map(([title, sub, days, tone]) => (
-            <div key={title} className="flex items-center justify-between text-xs">
-              <div className="min-w-0">
-                <div className="truncate">{title}</div>
-                <div className="truncate font-mono text-[10px] text-muted">
-                  {sub}
+          {rows.map(([title, sub, days, tone, image]) => (
+            <div key={title} className="flex items-center justify-between gap-2 text-xs">
+              <div className="flex min-w-0 items-center gap-2">
+                {image ? (
+                  <ProductThumb imageUrl={image} name={title} size="sm" />
+                ) : null}
+                <div className="min-w-0">
+                  <div className="truncate">{title}</div>
+                  <div className="truncate font-mono text-[10px] text-muted">
+                    {sub}
+                  </div>
                 </div>
               </div>
               <span

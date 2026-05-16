@@ -1,8 +1,8 @@
-// Best-effort product photo lookup. We try Open Food Facts first (free,
-// no key, broad grocery coverage). For non-grocery items the lookup is
-// expected to miss, in which case we return null and the UI falls back
-// to a generic icon. This module never throws — callers can Promise.all
-// without try/catch.
+// Best-effort product photo lookup. Known demo products (AirPods, Nike Air Max,
+// Whole Foods) resolve from /public/products first, then Open Food Facts for
+// groceries. This module never throws — callers can Promise.all without try/catch.
+
+import { knownProductImage } from "@/lib/knownProductImages";
 
 const OFF_SEARCH =
   "https://world.openfoodfacts.org/cgi/search.pl" +
@@ -25,7 +25,15 @@ async function fetchWithTimeout(url: string): Promise<Response | null> {
   }
 }
 
-export async function lookupProductImage(name: string): Promise<string | null> {
+export async function lookupProductImage(
+  name: string,
+  merchant?: string | null,
+  useOpenFoodFacts = false,
+): Promise<string | null> {
+  const known = knownProductImage(name, merchant);
+  if (known) return known;
+  if (!useOpenFoodFacts) return null;
+
   const q = name.trim();
   if (q.length < 3) return null;
   const url = `${OFF_SEARCH}&search_terms=${encodeURIComponent(q)}`;
@@ -42,8 +50,12 @@ export async function lookupProductImage(name: string): Promise<string | null> {
   }
 }
 
-// Run lookups in parallel with a hard cap so a slow OFF response can't
-// stall the whole scan. Returns the same-length array, null where missing.
-export async function lookupImages(names: string[]): Promise<(string | null)[]> {
-  return Promise.all(names.map((n) => lookupProductImage(n)));
+export async function lookupImages(
+  names: string[],
+  merchant?: string | null,
+  useOpenFoodFacts = false,
+): Promise<(string | null)[]> {
+  return Promise.all(
+    names.map((n) => lookupProductImage(n, merchant, useOpenFoodFacts)),
+  );
 }
