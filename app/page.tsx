@@ -115,7 +115,7 @@ export default function LandingPage() {
                 label="Warranties ending"
                 value="1"
                 sub="next 30 days"
-                rows={[["Organic blueberries", "Whole Foods", "22d", "amber", "/products/whole-foods.png"]]}
+                rows={[["V15 Detect vacuum", "Dyson", "22d", "amber"]]}
               />
               <MockStat
                 label="This month"
