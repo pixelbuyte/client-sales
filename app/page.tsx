@@ -107,8 +107,8 @@ export default function LandingPage() {
                 value="2"
                 sub="next 14 days"
                 rows={[
-                  ["AirPods Pro", "Apple", "3d", "red", "/products/airpods-pro.jpg"],
-                  ["Nike Air Max", "Nike", "11d", "gray", "/products/nike-air-max.jpg"],
+                  ["AirPods Pro", "Apple", "3d", "red", "/products/airpods-pro.png"],
+                  ["Nike Air Max", "Nike", "11d", "gray", "/products/nike-air-max.png"],
                 ]}
               />
               <MockStat
@@ -512,9 +512,12 @@ function MockStat({
           {rows.map(([title, sub, days, tone, image]) => (
             <div key={title} className="flex items-center justify-between gap-2 text-xs">
               <div className="flex min-w-0 items-center gap-2">
-                {image ? (
-                  <ProductThumb imageUrl={image} name={title} size="sm" />
-                ) : null}
+                <ProductThumb
+                  imageUrl={image ?? null}
+                  name={title}
+                  merchant={sub}
+                  size="sm"
+                />
                 <div className="min-w-0">
                   <div className="truncate">{title}</div>
                   <div className="truncate font-mono text-[10px] text-muted">

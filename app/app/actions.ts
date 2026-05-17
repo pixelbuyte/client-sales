@@ -15,8 +15,8 @@ const SAMPLES: Array<{
   warrantyDays: number | null;
   image_url: string | null;
 }> = [
-  { item_name: "AirPods Pro", merchant: "Apple", category_name: "Electronics", price_cents: 24900, daysAgo: 4, returnDays: 30, warrantyDays: 365, image_url: "/products/airpods-pro.jpg" },
-  { item_name: "Nike Air Max", merchant: "Nike", category_name: "Clothing", price_cents: 17000, daysAgo: 6, returnDays: 30, warrantyDays: null, image_url: "/products/nike-air-max.jpg" },
+  { item_name: "AirPods Pro", merchant: "Apple", category_name: "Electronics", price_cents: 24900, daysAgo: 4, returnDays: 30, warrantyDays: 365, image_url: "/products/airpods-pro.png" },
+  { item_name: "Nike Air Max", merchant: "Nike", category_name: "Clothing", price_cents: 17000, daysAgo: 6, returnDays: 30, warrantyDays: null, image_url: "/products/nike-air-max.png" },
   { item_name: "Organic blueberries", merchant: "Whole Foods", category_name: "Groceries", price_cents: 899, daysAgo: 2, returnDays: null, warrantyDays: null, image_url: "/products/whole-foods.png" },
   { item_name: "Standing desk", merchant: "Fully", category_name: "Home", price_cents: 89900, daysAgo: 22, returnDays: 30, warrantyDays: 365 * 7, image_url: null },
   { item_name: "Vitamin D3", merchant: "Thorne", category_name: "Health", price_cents: 2999, daysAgo: 11, returnDays: null, warrantyDays: null, image_url: null },

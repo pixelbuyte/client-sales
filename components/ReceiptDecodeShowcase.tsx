@@ -1,14 +1,21 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { BrandMark, type BrandId } from "@/components/BrandMark";
 
-const DECODES = [
+const DECODES: Array<{
+  code: string;
+  name: string;
+  merchant: string;
+  category: string;
+  categoryColor: string;
+  brand: BrandId;
+}> = [
   {
     code: "APL AIRPODS PR",
     name: "AirPods Pro",
     merchant: "Apple",
     category: "Electronics",
     categoryColor: "#6366f1",
-    image: "/products/airpods-pro.jpg",
+    brand: "apple",
   },
   {
     code: "NIKE AIR MAX",
@@ -16,7 +23,7 @@ const DECODES = [
     merchant: "Nike",
     category: "Clothing",
     categoryColor: "#f59e0b",
-    image: "/products/nike-air-max.jpg",
+    brand: "nike",
   },
   {
     code: "WFM ORG BLB",
@@ -24,9 +31,9 @@ const DECODES = [
     merchant: "Whole Foods",
     category: "Groceries",
     categoryColor: "#22c55e",
-    image: "/products/whole-foods.png",
+    brand: "whole-foods",
   },
-] as const;
+];
 
 export function ReceiptDecodeShowcase() {
   return (
@@ -43,7 +50,6 @@ export function ReceiptDecodeShowcase() {
           className="decode-row group relative flex items-stretch gap-2 sm:gap-3"
           style={{ animationDelay: `${i * 120}ms` }}
         >
-          {/* Receipt strip */}
           <div className="flex min-w-0 flex-1 flex-col justify-center rounded-md border border-dashed border-border bg-sidebar/80 px-3 py-3 sm:px-4">
             <span className="font-mono text-[8px] uppercase tracking-widest text-muted/70">
               Line item
@@ -57,17 +63,8 @@ export function ReceiptDecodeShowcase() {
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.5} />
           </div>
 
-          {/* Dashboard card */}
           <div className="flex min-w-0 flex-[1.35] items-center gap-2.5 rounded-md border border-border bg-surface px-2.5 py-2 shadow-card transition-shadow group-hover:shadow-card-hover sm:gap-3 sm:px-3 sm:py-2.5">
-            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-border bg-bg sm:h-12 sm:w-12">
-              <Image
-                src={row.image}
-                alt={row.name}
-                fill
-                sizes="48px"
-                className="object-cover"
-              />
-            </div>
+            <BrandMark brand={row.brand} size="lg" />
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium leading-tight">
                 {row.name}
@@ -97,11 +94,16 @@ export function ReceiptDecodeShowcase() {
 }
 
 export function MerchantSenseShowcase() {
-  const types = [
-    { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", image: "/products/whole-foods.png" },
-    { merchant: "Apple", tag: "Retail", color: "#6366f1", image: "/products/airpods-pro.jpg" },
-    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", image: null },
-  ] as const;
+  const types: Array<{
+    merchant: string;
+    tag: string;
+    color: string;
+    brand: BrandId;
+  }> = [
+    { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", brand: "whole-foods" },
+    { merchant: "Apple", tag: "Retail", color: "#6366f1", brand: "apple" },
+    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", brand: "chipotle" },
+  ];
 
   return (
     <div className="mt-6 space-y-3">
@@ -110,15 +112,7 @@ export function MerchantSenseShowcase() {
           key={t.merchant}
           className="flex items-center gap-3 rounded-md border border-border bg-bg/60 px-3 py-3 sm:px-4"
         >
-          {t.image ? (
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border bg-surface">
-              <Image src={t.image} alt="" fill sizes="40px" className="object-cover" />
-            </div>
-          ) : (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-lg">
-              🌯
-            </div>
-          )}
+          <BrandMark brand={t.brand} size="md" />
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium">{t.merchant}</div>
             <div className="font-mono text-[10px] text-muted">detected automatically</div>

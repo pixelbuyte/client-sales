@@ -352,7 +352,14 @@ function Row({
   return (
     <div className="flex items-center justify-between gap-2 text-sm">
       <div className="flex min-w-0 items-center gap-2">
-        {imageUrl ? <ProductThumb imageUrl={imageUrl} name={title} size="sm" /> : null}
+        {imageUrl || brandFromMerchant(sub) ? (
+          <ProductThumb
+            imageUrl={imageUrl ?? null}
+            name={title}
+            merchant={sub}
+            size="sm"
+          />
+        ) : null}
         <div className="min-w-0">
           <div className="truncate">{title}</div>
           {sub ? <div className="truncate text-xs text-muted">{sub}</div> : null}

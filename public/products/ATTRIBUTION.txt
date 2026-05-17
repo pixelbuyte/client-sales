@@ -1,10 +1,12 @@
-Product images in this folder (Wikimedia Commons):
+Square brand tiles (256×256, cream background) for UI thumbnails.
 
-- airpods-pro.jpg — AirPods Pro (2nd generation), Hajoon0102, CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:AirPods_Pro_(2nd_generation).jpg
-
-- nike-air-max.jpg — Nike Air Max 97, Ssu, CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:Nike_Air_Max_97.jpg
-
-- whole-foods.png — Whole Foods Market logo (trademark; simple shapes, PD on Commons)
+- whole-foods.png — Whole Foods Market logo (Wikimedia Commons)
   https://commons.wikimedia.org/wiki/File:Whole_Foods_Market_201x_logo.svg
+
+- airpods-pro.png — Apple Inc. logo (Wikimedia Commons; used for Apple / AirPods rows)
+  https://commons.wikimedia.org/wiki/File:Apple_logo_black.svg
+
+- nike-air-max.png — Nike swoosh (Wikimedia Commons)
+  https://commons.wikimedia.org/wiki/File:Logo_NIKE.svg
+
+- chipotle.png — Stylized placeholder mark (Chipotle wordmark not on Commons)
