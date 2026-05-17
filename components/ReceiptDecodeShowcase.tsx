@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { MerchantLogo } from "@/components/MerchantLogo";
 
 const DECODES = [
   {
@@ -43,7 +43,6 @@ export function ReceiptDecodeShowcase() {
           className="decode-row group relative flex items-stretch gap-2 sm:gap-3"
           style={{ animationDelay: `${i * 120}ms` }}
         >
-          {/* Receipt strip */}
           <div className="flex min-w-0 flex-1 flex-col justify-center rounded-md border border-dashed border-border bg-sidebar/80 px-3 py-3 sm:px-4">
             <span className="font-mono text-[8px] uppercase tracking-widest text-muted/70">
               Line item
@@ -57,17 +56,8 @@ export function ReceiptDecodeShowcase() {
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.5} />
           </div>
 
-          {/* Dashboard card */}
           <div className="flex min-w-0 flex-[1.35] items-center gap-2.5 rounded-md border border-border bg-surface px-2.5 py-2 shadow-card transition-shadow group-hover:shadow-card-hover sm:gap-3 sm:px-3 sm:py-2.5">
-            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-border bg-bg sm:h-12 sm:w-12">
-              <Image
-                src={row.image}
-                alt={row.name}
-                fill
-                sizes="48px"
-                className="object-contain p-1.5"
-              />
-            </div>
+            <MerchantLogo src={row.image} alt={row.merchant} size="lg" />
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium leading-tight">
                 {row.name}
@@ -100,7 +90,7 @@ export function MerchantSenseShowcase() {
   const types = [
     { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", image: "/products/whole-foods.png" },
     { merchant: "Apple", tag: "Retail", color: "#6366f1", image: "/products/airpods-pro.png" },
-    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", image: null },
+    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", image: "/products/chipotle.png" },
   ] as const;
 
   return (
@@ -110,15 +100,7 @@ export function MerchantSenseShowcase() {
           key={t.merchant}
           className="flex items-center gap-3 rounded-md border border-border bg-bg/60 px-3 py-3 sm:px-4"
         >
-          {t.image ? (
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border bg-surface">
-              <Image src={t.image} alt="" fill sizes="40px" className="object-contain p-1.5" />
-            </div>
-          ) : (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-lg">
-              🌯
-            </div>
-          )}
+          <MerchantLogo src={t.image} alt={t.merchant} size="md" />
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium">{t.merchant}</div>
             <div className="font-mono text-[10px] text-muted">detected automatically</div>
