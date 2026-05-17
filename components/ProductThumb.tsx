@@ -23,7 +23,7 @@ export function ProductThumb({
           alt={name}
           fill
           sizes={size === "sm" ? "32px" : "40px"}
-          className="object-cover"
+          className="object-contain p-1.5"
         />
       </div>
     );

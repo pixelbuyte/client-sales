@@ -8,7 +8,7 @@ const DECODES = [
     merchant: "Apple",
     category: "Electronics",
     categoryColor: "#6366f1",
-    image: "/products/airpods-pro.jpg",
+    image: "/products/airpods-pro.png",
   },
   {
     code: "NIKE AIR MAX",
@@ -16,7 +16,7 @@ const DECODES = [
     merchant: "Nike",
     category: "Clothing",
     categoryColor: "#f59e0b",
-    image: "/products/nike-air-max.jpg",
+    image: "/products/nike-air-max.png",
   },
   {
     code: "WFM ORG BLB",
@@ -65,7 +65,7 @@ export function ReceiptDecodeShowcase() {
                 alt={row.name}
                 fill
                 sizes="48px"
-                className="object-cover"
+                className="object-contain p-1.5"
               />
             </div>
             <div className="min-w-0 flex-1">
@@ -99,7 +99,7 @@ export function ReceiptDecodeShowcase() {
 export function MerchantSenseShowcase() {
   const types = [
     { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", image: "/products/whole-foods.png" },
-    { merchant: "Apple", tag: "Retail", color: "#6366f1", image: "/products/airpods-pro.jpg" },
+    { merchant: "Apple", tag: "Retail", color: "#6366f1", image: "/products/airpods-pro.png" },
     { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", image: null },
   ] as const;
 
@@ -112,7 +112,7 @@ export function MerchantSenseShowcase() {
         >
           {t.image ? (
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border bg-surface">
-              <Image src={t.image} alt="" fill sizes="40px" className="object-cover" />
+              <Image src={t.image} alt="" fill sizes="40px" className="object-contain p-1.5" />
             </div>
           ) : (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-lg">

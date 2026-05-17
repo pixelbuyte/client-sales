@@ -2,9 +2,9 @@
 // Served from /public/products — see public/products/ATTRIBUTION.txt.
 
 const BY_NAME: Record<string, string> = {
-  "airpods pro": "/products/airpods-pro.jpg",
-  "nike air max": "/products/nike-air-max.jpg",
-  "nike air max 97": "/products/nike-air-max.jpg",
+  "airpods pro": "/products/airpods-pro.png",
+  "nike air max": "/products/nike-air-max.png",
+  "nike air max 97": "/products/nike-air-max.png",
 };
 
 const BY_MERCHANT: Record<string, string> = {

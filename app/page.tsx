@@ -107,8 +107,8 @@ export default function LandingPage() {
                 value="2"
                 sub="next 14 days"
                 rows={[
-                  ["AirPods Pro", "Apple", "3d", "red", "/products/airpods-pro.jpg"],
-                  ["Nike Air Max", "Nike", "11d", "gray", "/products/nike-air-max.jpg"],
+                  ["AirPods Pro", "Apple", "3d", "red", "/products/airpods-pro.png"],
+                  ["Nike Air Max", "Nike", "11d", "gray", "/products/nike-air-max.png"],
                 ]}
               />
               <MockStat

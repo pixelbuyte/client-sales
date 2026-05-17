@@ -1,10 +1,10 @@
-Product images in this folder (Wikimedia Commons):
+Product images in this folder (Wikimedia Commons — merchant logos, same style as Whole Foods):
 
-- airpods-pro.jpg — AirPods Pro, Arne Müseler (Canon EOS 5D Mark IV studio), CC BY-SA 3.0 DE
-  https://commons.wikimedia.org/wiki/File:Apple_airpods_pro.jpg
+- airpods-pro.png — Apple Inc. logo, public domain on Commons (trademark may apply)
+  https://commons.wikimedia.org/wiki/File:Apple_logo_black.svg
 
-- nike-air-max.jpg — Nike Air Max 97 “Silver Bullet”, Choledocho, CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:Air_Max_97.jpg
+- nike-air-max.png — Nike swoosh logo, public domain on Commons (trademark may apply)
+  https://commons.wikimedia.org/wiki/File:Logo_NIKE.svg
 
-- whole-foods.png — Whole Foods Market logo (trademark; simple shapes, PD on Commons)
+- whole-foods.png — Whole Foods Market logo
   https://commons.wikimedia.org/wiki/File:Whole_Foods_Market_201x_logo.svg
