@@ -158,6 +158,7 @@ export default async function ReceiptDetailPage({
                     imageUrl={it.image_url}
                     color={cat?.color}
                     name={it.item_name}
+                    merchant={receipt.merchant}
                   />
                   <div className="min-w-0 flex-1">
                     <div className="truncate font-medium">{it.item_name}</div>

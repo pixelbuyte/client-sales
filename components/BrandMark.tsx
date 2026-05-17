@@ -20,7 +20,14 @@ export function brandFromPath(path: string | null | undefined): BrandId | null {
 export function brandFromMerchant(merchant: string | null | undefined): BrandId | null {
   const m = merchant?.trim().toLowerCase() ?? "";
   if (m.includes("whole foods")) return "whole-foods";
-  if (m === "apple" || m.includes("apple")) return "apple";
+  if (
+    m === "apple" ||
+    m.includes("apple store") ||
+    m.includes("apple.com") ||
+    m.includes("apple inc")
+  ) {
+    return "apple";
+  }
   if (m.includes("nike")) return "nike";
   if (m.includes("chipotle")) return "chipotle";
   return null;
