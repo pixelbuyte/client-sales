@@ -1,14 +1,21 @@
 import { ArrowRight } from "lucide-react";
-import { MerchantLogo } from "@/components/MerchantLogo";
+import { BrandMark, type BrandId } from "@/components/BrandMark";
 
-const DECODES = [
+const DECODES: Array<{
+  code: string;
+  name: string;
+  merchant: string;
+  category: string;
+  categoryColor: string;
+  brand: BrandId;
+}> = [
   {
     code: "APL AIRPODS PR",
     name: "AirPods Pro",
     merchant: "Apple",
     category: "Electronics",
     categoryColor: "#6366f1",
-    image: "/products/airpods-pro.png",
+    brand: "apple",
   },
   {
     code: "NIKE AIR MAX",
@@ -16,7 +23,7 @@ const DECODES = [
     merchant: "Nike",
     category: "Clothing",
     categoryColor: "#f59e0b",
-    image: "/products/nike-air-max.png",
+    brand: "nike",
   },
   {
     code: "WFM ORG BLB",
@@ -24,9 +31,9 @@ const DECODES = [
     merchant: "Whole Foods",
     category: "Groceries",
     categoryColor: "#22c55e",
-    image: "/products/whole-foods.png",
+    brand: "whole-foods",
   },
-] as const;
+];
 
 export function ReceiptDecodeShowcase() {
   return (
@@ -57,7 +64,7 @@ export function ReceiptDecodeShowcase() {
           </div>
 
           <div className="flex min-w-0 flex-[1.35] items-center gap-2.5 rounded-md border border-border bg-surface px-2.5 py-2 shadow-card transition-shadow group-hover:shadow-card-hover sm:gap-3 sm:px-3 sm:py-2.5">
-            <MerchantLogo src={row.image} alt={row.merchant} size="lg" />
+            <BrandMark brand={row.brand} size="lg" />
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium leading-tight">
                 {row.name}
@@ -87,11 +94,16 @@ export function ReceiptDecodeShowcase() {
 }
 
 export function MerchantSenseShowcase() {
-  const types = [
-    { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", image: "/products/whole-foods.png" },
-    { merchant: "Apple", tag: "Retail", color: "#6366f1", image: "/products/airpods-pro.png" },
-    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", image: "/products/chipotle.png" },
-  ] as const;
+  const types: Array<{
+    merchant: string;
+    tag: string;
+    color: string;
+    brand: BrandId;
+  }> = [
+    { merchant: "Whole Foods", tag: "Grocery", color: "#22c55e", brand: "whole-foods" },
+    { merchant: "Apple", tag: "Retail", color: "#6366f1", brand: "apple" },
+    { merchant: "Chipotle", tag: "Restaurant", color: "#D4451A", brand: "chipotle" },
+  ];
 
   return (
     <div className="mt-6 space-y-3">
@@ -100,7 +112,7 @@ export function MerchantSenseShowcase() {
           key={t.merchant}
           className="flex items-center gap-3 rounded-md border border-border bg-bg/60 px-3 py-3 sm:px-4"
         >
-          <MerchantLogo src={t.image} alt={t.merchant} size="md" />
+          <BrandMark brand={t.brand} size="md" />
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium">{t.merchant}</div>
             <div className="font-mono text-[10px] text-muted">detected automatically</div>

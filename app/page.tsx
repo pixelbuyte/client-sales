@@ -512,9 +512,12 @@ function MockStat({
           {rows.map(([title, sub, days, tone, image]) => (
             <div key={title} className="flex items-center justify-between gap-2 text-xs">
               <div className="flex min-w-0 items-center gap-2">
-                {image ? (
-                  <ProductThumb imageUrl={image} name={title} size="sm" />
-                ) : null}
+                <ProductThumb
+                  imageUrl={image ?? null}
+                  name={title}
+                  merchant={sub}
+                  size="sm"
+                />
                 <div className="min-w-0">
                   <div className="truncate">{title}</div>
                   <div className="truncate font-mono text-[10px] text-muted">

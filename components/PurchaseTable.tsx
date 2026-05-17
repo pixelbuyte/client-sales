@@ -51,6 +51,7 @@ export function PurchaseTable({ rows }: { rows: Row[] }) {
                     <ProductThumb
                       imageUrl={p.image_url}
                       name={p.item_name}
+                      merchant={p.merchant}
                       color={p.category?.color}
                       size="sm"
                     />

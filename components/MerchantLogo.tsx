@@ -1,4 +1,10 @@
 import Image from "next/image";
+import {
+  BrandMark,
+  brandFromMerchant,
+  brandFromPath,
+  type BrandId,
+} from "@/components/BrandMark";
 
 const SIZES = {
   sm: { box: "h-8 w-8", pad: "p-1", px: "32px" },
@@ -6,16 +12,24 @@ const SIZES = {
   lg: { box: "h-12 w-12", pad: "p-2", px: "48px" },
 } as const;
 
-/** Square brand mark — matches Whole Foods-style tiles in /public/products */
 export function MerchantLogo({
   src,
   alt,
+  merchant,
   size = "md",
 }: {
   src: string;
   alt: string;
+  merchant?: string | null;
   size?: keyof typeof SIZES;
 }) {
+  const brand: BrandId | null =
+    brandFromMerchant(merchant) ?? brandFromPath(src);
+
+  if (brand) {
+    return <BrandMark brand={brand} size={size} />;
+  }
+
   const s = SIZES[size];
   return (
     <div
