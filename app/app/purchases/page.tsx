@@ -25,7 +25,7 @@ export default async function PurchasesPage({ searchParams }: { searchParams: Se
   let query = supabase
     .from("purchases")
     .select(
-      "id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end, receipt_path, category:categories(name, color)",
+      "id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end, receipt_path, image_url, category:categories(name, color)",
     )
     .order("order_date", { ascending: false })
     .limit(100);

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sparkles, Trash2, Plus } from "lucide-react";
+import { ProductThumb } from "@/components/ProductThumb";
 import { createPurchase, createReceipt } from "@/app/app/purchases/actions";
 import { addDaysISO, todayISO } from "@/lib/dates";
 
@@ -417,6 +418,7 @@ function ScannedItemsPanel({
         <table className="w-full text-sm">
           <thead className="bg-bg/60 font-mono text-[10px] uppercase tracking-widest text-muted">
             <tr>
+              <th className="w-12 px-2 py-2" />
               <th className="px-3 py-2 text-left">Item</th>
               <th className="px-3 py-2 text-right w-20">Qty</th>
               <th className="px-3 py-2 text-right w-28">Price</th>
@@ -426,6 +428,9 @@ function ScannedItemsPanel({
           <tbody>
             {items.map((it, i) => (
               <tr key={i} className="border-t border-border">
+                <td className="px-2 py-2">
+                  <ProductThumb imageUrl={it.image_url} name={it.name || "Item"} size="sm" />
+                </td>
                 <td className="px-3 py-2">
                   <input
                     className="input"
@@ -466,6 +471,7 @@ function ScannedItemsPanel({
           </tbody>
           <tfoot>
             <tr className="border-t border-border bg-bg/60">
+              <td />
               <td className="px-3 py-2">
                 <button
                   type="button"

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ProductThumb } from "@/components/ProductThumb";
 import { Mic, Store } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { StatCard } from "@/components/StatCard";
@@ -20,6 +21,7 @@ type Purchase = {
   currency: string;
   return_deadline: string | null;
   warranty_end: string | null;
+  image_url: string | null;
 };
 
 export default async function DashboardPage() {
@@ -53,14 +55,14 @@ export default async function DashboardPage() {
     supabase.from("purchases").select("id", { count: "exact", head: true }),
     supabase
       .from("purchases")
-      .select("id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end")
+      .select("id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end, image_url")
       .gte("return_deadline", today)
       .lte("return_deadline", returnsHorizon)
       .order("return_deadline", { ascending: true })
       .limit(5),
     supabase
       .from("purchases")
-      .select("id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end")
+      .select("id, item_name, merchant, order_date, price_cents, currency, return_deadline, warranty_end, image_url")
       .gte("warranty_end", today)
       .lte("warranty_end", warrantyHorizon)
       .order("warranty_end", { ascending: true })
@@ -122,7 +124,7 @@ export default async function DashboardPage() {
           sub="next 14 days"
         >
           {(returns ?? []).slice(0, 3).map((p: Purchase) => (
-            <Row key={p.id} title={p.item_name} sub={p.merchant} days={daysUntil(p.return_deadline)} />
+            <Row key={p.id} title={p.item_name} sub={p.merchant} days={daysUntil(p.return_deadline)} imageUrl={p.image_url} />
           ))}
         </StatCard>
         <StatCard
@@ -131,7 +133,7 @@ export default async function DashboardPage() {
           sub="next 30 days"
         >
           {(warranties ?? []).slice(0, 3).map((p: Purchase) => (
-            <Row key={p.id} title={p.item_name} sub={p.merchant} days={daysUntil(p.warranty_end)} />
+            <Row key={p.id} title={p.item_name} sub={p.merchant} days={daysUntil(p.warranty_end)} imageUrl={p.image_url} />
           ))}
         </StatCard>
         <StatCard
@@ -336,12 +338,25 @@ function Header() {
   );
 }
 
-function Row({ title, sub, days }: { title: string; sub: string | null; days: number | null }) {
+function Row({
+  title,
+  sub,
+  days,
+  imageUrl,
+}: {
+  title: string;
+  sub: string | null;
+  days: number | null;
+  imageUrl?: string | null;
+}) {
   return (
-    <div className="flex items-center justify-between text-sm">
-      <div className="min-w-0">
-        <div className="truncate">{title}</div>
-        {sub ? <div className="truncate text-xs text-muted">{sub}</div> : null}
+    <div className="flex items-center justify-between gap-2 text-sm">
+      <div className="flex min-w-0 items-center gap-2">
+        {imageUrl ? <ProductThumb imageUrl={imageUrl} name={title} size="sm" /> : null}
+        <div className="min-w-0">
+          <div className="truncate">{title}</div>
+          {sub ? <div className="truncate text-xs text-muted">{sub}</div> : null}
+        </div>
       </div>
       <DeadlineChip days={days} />
     </div>

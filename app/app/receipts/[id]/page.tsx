@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { ProductThumb } from "@/components/ProductThumb";
 import { createClient } from "@/lib/supabase/server";
 import { fmtDate } from "@/lib/dates";
 import { formatCents } from "@/lib/format";
@@ -219,42 +219,8 @@ export default async function ReceiptDetailPage({
       </div>
 
       <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-muted">
-        Product photos · auto-detect coming soon
+        Product photos · matched automatically when possible
       </p>
     </>
-  );
-}
-
-function ProductThumb({
-  imageUrl,
-  color,
-  name,
-}: {
-  imageUrl: string | null;
-  color: string | undefined;
-  name: string;
-}) {
-  if (imageUrl) {
-    return (
-      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-border bg-surface">
-        <Image
-          src={imageUrl}
-          alt={name}
-          fill
-          sizes="48px"
-          className="object-cover"
-        />
-      </div>
-    );
-  }
-  const bg = (color ?? "#8B7355") + "20";
-  const fg = color ?? "#8B7355";
-  return (
-    <div
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border"
-      style={{ backgroundColor: bg, color: fg }}
-    >
-      <ShoppingBag className="h-5 w-5" />
-    </div>
   );
 }

@@ -151,18 +151,21 @@ export async function POST(req: Request) {
 
     const parsed = response.parsed_output;
 
-    // Best-effort product photos. Only worth looking up for grocery-ish
-    // receipts (Open Food Facts only covers food/personal care). Skip
-    // restaurants since the "items" are prepared dishes that won't match.
-    const lookupWorthwhile =
+    // Best-effort product photos: curated images for known items, plus Open
+    // Food Facts for grocery receipts.
+    const useOpenFoodFacts =
       parsed.merchant_type === "grocery" ||
       parsed.merchant_type === "convenience" ||
       parsed.merchant_type === "pharmacy";
 
     let images: (string | null)[] = parsed.items.map(() => null);
-    if (lookupWorthwhile && parsed.items.length > 0 && parsed.items.length <= 25) {
+    if (parsed.items.length > 0 && parsed.items.length <= 25) {
       try {
-        images = await lookupImages(parsed.items.map((it) => it.name));
+        images = await lookupImages(
+          parsed.items.map((it) => it.name),
+          parsed.merchant,
+          useOpenFoodFacts,
+        );
       } catch {
         // never block save on photo lookup failure
       }
