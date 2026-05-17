@@ -18,8 +18,7 @@ export function ProductThumb({
   const icon = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   const brand =
     brandFromMerchant(merchant) ??
-    brandFromPath(imageUrl) ??
-    brandFromMerchant(name);
+    brandFromPath(imageUrl);
 
   if (brand) {
     return <BrandMark brand={brand} size={size} />;

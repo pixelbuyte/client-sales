@@ -429,7 +429,12 @@ function ScannedItemsPanel({
             {items.map((it, i) => (
               <tr key={i} className="border-t border-border">
                 <td className="px-2 py-2">
-                  <ProductThumb imageUrl={it.image_url} name={it.name || "Item"} size="sm" />
+                  <ProductThumb
+                    imageUrl={it.image_url}
+                    name={it.name || "Item"}
+                    merchant={merchant}
+                    size="sm"
+                  />
                 </td>
                 <td className="px-3 py-2">
                   <input

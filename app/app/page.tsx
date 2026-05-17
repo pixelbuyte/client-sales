@@ -7,6 +7,7 @@ import { DeadlineChip } from "@/components/DeadlineChip";
 import { EmptyState } from "@/components/EmptyState";
 import { SpendBarChart } from "@/components/SpendBarChart";
 import { CategoryDonut } from "@/components/CategoryDonut";
+import { brandFromMerchant } from "@/components/BrandMark";
 import { addDaysISO, daysUntil, fmtDate, todayISO } from "@/lib/dates";
 import { formatCents } from "@/lib/format";
 
