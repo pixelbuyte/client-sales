@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { brandFromMerchant } from "@/components/BrandMark";
 import { ProductThumb } from "@/components/ProductThumb";
 import { Mic, Store } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
