@@ -1,9 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { BrandMark } from "@/components/BrandMark";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const notAuthorized = searchParams.get("error") === "not_authorized";
+
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
@@ -32,35 +45,31 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-bg px-6">
       <div className="w-full max-w-sm">
-        {/* Logo */}
         <div className="mb-8 flex items-center gap-2.5">
-          <div className="flex h-7 w-7 flex-col items-center justify-center gap-0.5 rounded-md bg-accent px-1.5">
-            {[100, 70, 85, 55].map((w, i) => (
-              <div
-                key={i}
-                className="h-[2px] rounded-full bg-white/80"
-                style={{ width: `${w}%` }}
-              />
-            ))}
-          </div>
+          <BrandMark />
           <a href="/" className="font-display text-base font-semibold tracking-tight hover:text-accent transition-colors">
-            Purchase Ping
+            Admin
           </a>
         </div>
 
         <div className="card p-7">
-          {/* Receipt-style header */}
           <div className="mb-6 border-b border-dashed border-border pb-5">
             <div className="font-mono text-[10px] uppercase tracking-widest text-muted">
               Sign in
             </div>
             <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight">
-              Welcome back
+              Tracker access
             </h1>
             <p className="mt-1.5 text-sm text-muted">
               We&apos;ll email you a magic link. No password required.
             </p>
           </div>
+
+          {notAuthorized ? (
+            <div className="mb-4 rounded-[4px] border border-accent-200 bg-accent-50 p-3 text-sm text-accent">
+              That account isn&apos;t authorized for the tracker.
+            </div>
+          ) : null}
 
           {status === "sent" ? (
             <div className="rounded-[4px] border border-success/20 bg-success-50 p-4">

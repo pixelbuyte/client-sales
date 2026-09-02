@@ -23,9 +23,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Purchase Ping",
-  description:
-    "Personal control center for online purchases — receipts, return deadlines, warranties, and spending.",
+  title: "HVAC Lead Recovery",
+  description: "Missed-call and dead-estimate recovery for HVAC shops.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
