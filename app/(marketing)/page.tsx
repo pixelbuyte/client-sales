@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BUSINESS_NAME } from "@/lib/business";
 import { JobTickets } from "@/components/marketing/JobTickets";
+import { LogoMark, Wordmark } from "@/components/marketing/Logo";
 
 export const metadata = {
   title: `${BUSINESS_NAME} — missed-call & dead-estimate recovery for HVAC shops`,
@@ -33,13 +34,9 @@ function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-sand-line/80 bg-sand-bg/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded bg-clay font-serif text-[13px] text-sand-surface">
-            H
-          </span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
-            {BUSINESS_NAME}
-          </span>
+        <Link href="/" className="flex items-center gap-2">
+          <LogoMark className="h-7 w-7" />
+          <Wordmark className="text-sand-ink" />
         </Link>
         <nav className="flex items-center gap-5">
           <Link
