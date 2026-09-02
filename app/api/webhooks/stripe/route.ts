@@ -2,23 +2,33 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendChurnSaverEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Events that mutate profile state. Anything not in this set still gets
-// logged into billing_events for auditing but skips handleEvent.
-// invoice.payment_succeeded is intentionally not here — the corresponding
-// customer.subscription.updated event already carries the plan state we
-// need, so handling it twice would just be duplicate work.
+// Events that mutate shop state. Anything not in this set still gets logged
+// into payment_events for auditing but skips handleEvent.
 const RELEVANT = new Set([
   "checkout.session.completed",
   "customer.subscription.created",
   "customer.subscription.updated",
   "customer.subscription.deleted",
   "invoice.payment_failed",
+  "charge.refunded",
 ]);
+
+// Forward-only stage ordering: a webhook should never move a shop backwards
+// through the funnel (e.g. a delayed checkout.session.completed retry
+// arriving after the shop is already live).
+const STAGE_RANK: Record<string, number> = {
+  prospect: 0,
+  demo_booked: 1,
+  attended: 2,
+  payment_link_sent: 3,
+  paid: 4,
+  live: 5,
+  subscription_active: 6,
+};
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -56,10 +66,10 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
 
   // Idempotency: skip if we've recorded this event before. The unique
-  // constraint on stripe_event_id makes this safe under retries even if
-  // two pods process the event simultaneously — only one INSERT succeeds.
+  // constraint on stripe_event_id makes this safe under retries even if two
+  // pods process the event simultaneously — only one INSERT succeeds.
   const dedup = await admin
-    .from("billing_events")
+    .from("payment_events")
     .select("id")
     .eq("stripe_event_id", event.id)
     .maybeSingle();
@@ -68,8 +78,10 @@ export async function POST(req: Request) {
   }
   if (dedup.data) return NextResponse.json({ received: true, dedup: true });
 
+  let shopId: string | null = null;
   if (!RELEVANT.has(event.type)) {
-    const { error } = await admin.from("billing_events").insert({
+    const { error } = await admin.from("payment_events").insert({
+      shop_id: null,
       stripe_event_id: event.id,
       type: event.type,
       payload: event as unknown as Record<string, unknown>,
@@ -79,7 +91,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    await handleEvent(admin, client, event);
+    shopId = await handleEvent(admin, client, event);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : String(e) },
@@ -89,8 +101,9 @@ export async function POST(req: Request) {
 
   // Only record AFTER handleEvent succeeds. If the insert here fails Stripe
   // will retry the event; on retry the dedup SELECT misses and handleEvent
-  // runs again. The profile updates inside handleEvent are idempotent.
-  const { error: logErr } = await admin.from("billing_events").insert({
+  // runs again. The shop updates inside handleEvent are idempotent.
+  const { error: logErr } = await admin.from("payment_events").insert({
+    shop_id: shopId,
     stripe_event_id: event.id,
     type: event.type,
     payload: event as unknown as Record<string, unknown>,
@@ -105,24 +118,67 @@ export async function POST(req: Request) {
 type Admin = ReturnType<typeof createAdminClient>;
 type StripeClient = ReturnType<typeof stripe>;
 
-async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Event) {
+async function advanceStage(admin: Admin, shopId: string, nextStage: string) {
+  const { data: shop, error } = await admin
+    .from("shops")
+    .select("stage")
+    .eq("id", shopId)
+    .single();
+  if (error || !shop) return;
+  if (STAGE_RANK[nextStage] > STAGE_RANK[shop.stage]) {
+    await admin.from("shops").update({ stage: nextStage }).eq("id", shopId);
+  }
+}
+
+// Returns the shop_id the event applies to, if any, so it can be recorded
+// on the payment_events row.
+async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Event): Promise<string | null> {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const userId =
+    const shopId =
       session.client_reference_id ??
-      (typeof session.metadata?.supabase_user_id === "string"
-        ? session.metadata.supabase_user_id
-        : null);
+      (typeof session.metadata?.shop_id === "string" ? session.metadata.shop_id : null);
+    if (!shopId) return null;
+
     const customerId =
       typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
-    if (userId && customerId) {
+
+    if (session.mode === "payment") {
+      const paymentIntentId =
+        typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : session.payment_intent?.id ?? null;
       const { error } = await admin
-        .from("profiles")
-        .update({ stripe_customer_id: customerId, plan: "pro" })
-        .eq("id", userId);
-      if (error) throw new Error(`profiles update failed: ${error.message}`);
+        .from("shops")
+        .update({
+          ...(customerId ? { stripe_customer_id: customerId } : {}),
+          stripe_setup_checkout_session_id: session.id,
+          stripe_setup_payment_intent_id: paymentIntentId,
+          setup_paid_at: new Date().toISOString(),
+        })
+        .eq("id", shopId);
+      if (error) throw new Error(`shops update failed: ${error.message}`);
+      await advanceStage(admin, shopId, "paid");
+    } else if (session.mode === "subscription") {
+      // Fallback path only — the primary go-live path creates the
+      // subscription directly via the API (see app/app/shops/[id]/actions.ts)
+      // and doesn't go through Checkout.
+      const subscriptionId =
+        typeof session.subscription === "string"
+          ? session.subscription
+          : session.subscription?.id ?? null;
+      const { error } = await admin
+        .from("shops")
+        .update({
+          ...(customerId ? { stripe_customer_id: customerId } : {}),
+          stripe_subscription_id: subscriptionId,
+          subscription_started_at: new Date().toISOString(),
+        })
+        .eq("id", shopId);
+      if (error) throw new Error(`shops update failed: ${error.message}`);
+      await advanceStage(admin, shopId, "live");
     }
-    return;
+    return shopId;
   }
 
   if (
@@ -133,67 +189,74 @@ async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Eve
     const sub = event.data.object as Stripe.Subscription;
     const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
 
-    // Source of truth is the customer's live subscriptions in Stripe, not the
-    // event payload. This makes the handler order-insensitive: a stale
-    // `subscription.deleted` retry that arrives after a new subscription has
-    // been created won't downgrade the user, because the live list still
-    // shows an active subscription.
-    const subs = await client.subscriptions.list({
-      customer: customerId,
-      status: "all",
-      limit: 10,
-    });
-    const liveActive = subs.data.find((s) =>
-      ["active", "trialing", "past_due"].includes(s.status),
-    );
-    const renewsAt = liveActive?.current_period_end
-      ? new Date(liveActive.current_period_end * 1000).toISOString()
-      : null;
+    const { data: shop } = await admin
+      .from("shops")
+      .select("id")
+      .eq("stripe_customer_id", customerId)
+      .maybeSingle();
+    if (!shop) return null;
+
+    // Source of truth is the customer's live subscriptions in Stripe, not
+    // the event payload, so retries and out-of-order delivery are safe.
+    const subs = await client.subscriptions.list({ customer: customerId, status: "all", limit: 10 });
+    const liveActive = subs.data.find((s) => ["active", "trialing", "past_due"].includes(s.status));
+
+    const status: "active" | "past_due" | "canceled" | null = liveActive
+      ? liveActive.status === "past_due"
+        ? "past_due"
+        : "active"
+      : "canceled";
 
     const { error } = await admin
-      .from("profiles")
+      .from("shops")
       .update({
-        plan: liveActive ? "pro" : "free",
-        plan_renews_at: liveActive ? renewsAt : null,
+        subscription_status: status,
+        stripe_subscription_id: liveActive?.id ?? sub.id,
       })
-      .eq("stripe_customer_id", customerId);
-    if (error) throw new Error(`profiles update failed: ${error.message}`);
+      .eq("id", shop.id);
+    if (error) throw new Error(`shops update failed: ${error.message}`);
 
-    // Churn-saver: detect the transition from "not pending cancel" to "pending
-    // cancel" — that's when Stripe's customer portal flips
-    // cancel_at_period_end true. Fire one email at that moment with a "we
-    // kept your data, come back" message and a link to the portal.
-    // event.data.previous_attributes is only present on .updated events.
-    if (event.type === "customer.subscription.updated") {
-      const prev = (event.data.previous_attributes ?? {}) as Partial<Stripe.Subscription>;
-      const justCancelled =
-        prev.cancel_at_period_end === false && sub.cancel_at_period_end === true;
-      if (justCancelled && sub.current_period_end) {
-        const { data: profile } = await admin
-          .from("profiles")
-          .select("email")
-          .eq("stripe_customer_id", customerId)
-          .single();
-        if (profile?.email) {
-          try {
-            await sendChurnSaverEmail({
-              to: profile.email,
-              endsISO: new Date(sub.current_period_end * 1000).toISOString(),
-              appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "https://purchaseping.com",
-            });
-          } catch {
-            // Email is best-effort. Don't fail the webhook (and force a
-            // Stripe retry that would re-fire the email) over a Resend hiccup.
-          }
-        }
-      }
+    if (status === "active") {
+      await advanceStage(admin, shop.id, "subscription_active");
     }
-    return;
+    return shop.id;
   }
 
   if (event.type === "invoice.payment_failed") {
-    // Keep them on Pro for now — Stripe will retry. We'll only flip to free
-    // when the subscription itself transitions to canceled/unpaid.
-    return;
+    const invoice = event.data.object as Stripe.Invoice;
+    const customerId = typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
+    if (!customerId) return null;
+    const { data: shop } = await admin
+      .from("shops")
+      .select("id")
+      .eq("stripe_customer_id", customerId)
+      .maybeSingle();
+    if (!shop) return null;
+    const { error } = await admin
+      .from("shops")
+      .update({ subscription_status: "past_due" })
+      .eq("id", shop.id);
+    if (error) throw new Error(`shops update failed: ${error.message}`);
+    return shop.id;
   }
+
+  if (event.type === "charge.refunded") {
+    const charge = event.data.object as Stripe.Charge;
+    const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer?.id;
+    if (!customerId) return null;
+    const { data: shop } = await admin
+      .from("shops")
+      .select("id")
+      .eq("stripe_customer_id", customerId)
+      .maybeSingle();
+    if (!shop) return null;
+    const { error } = await admin
+      .from("shops")
+      .update({ refunded: true, refunded_at: new Date().toISOString() })
+      .eq("id", shop.id);
+    if (error) throw new Error(`shops update failed: ${error.message}`);
+    return shop.id;
+  }
+
+  return null;
 }

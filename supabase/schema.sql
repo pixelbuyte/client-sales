@@ -1,233 +1,91 @@
--- Purchase Ping schema
--- Apply in Supabase SQL editor. Requires pgcrypto for gen_random_uuid().
+-- HVAC lead-recovery schema
+-- Apply in Supabase SQL editor. Requires pgcrypto for gen_random_uuid()/gen_random_bytes().
 create extension if not exists pgcrypto;
 
--- 1. Profiles -----------------------------------------------------------------
-create table if not exists profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  email text not null,
-  full_name text,
-  reminder_returns_enabled boolean not null default true,
-  reminder_warranty_enabled boolean not null default true,
-  stripe_customer_id text unique,
-  plan text not null default 'free' check (plan in ('free','pro')),
-  plan_renews_at timestamptz,
-  created_at timestamptz not null default now()
-);
-
--- Auto-create profile row on auth.users insert
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer set search_path = public
-as $$
-begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
-  on conflict (id) do nothing;
-  return new;
-end;
-$$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
-
--- 2. Categories --------------------------------------------------------------
-create table if not exists categories (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references profiles(id) on delete cascade, -- null = system default
-  name text not null,
-  color text not null default '#6366f1'
-);
-
--- Partial unique indexes: NULL user_id (system rows) needs its own index
--- because Postgres treats NULLs as distinct in standard unique constraints.
-create unique index if not exists categories_user_name_uniq
-  on categories (user_id, name) where user_id is not null;
-create unique index if not exists categories_system_name_uniq
-  on categories (name) where user_id is null;
-
-insert into categories (user_id, name, color) values
-  (null,'Electronics','#6366f1'),
-  (null,'Home','#10b981'),
-  (null,'Clothing','#ec4899'),
-  (null,'Groceries','#f59e0b'),
-  (null,'Health','#ef4444'),
-  (null,'Travel','#06b6d4'),
-  (null,'Subscriptions','#8b5cf6'),
-  (null,'Other','#6b7280')
-on conflict do nothing;
-
--- 3. Purchases ---------------------------------------------------------------
-create table if not exists purchases (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references profiles(id) on delete cascade,
-  item_name text not null,
-  merchant text,
-  order_date date not null,
-  price_cents integer not null check (price_cents >= 0),
-  currency text not null default 'USD',
-  category_id uuid references categories(id) on delete set null,
-  return_deadline date,
-  warranty_end date,
-  notes text,
-  receipt_url text,
-  receipt_path text,
-  image_url text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create index if not exists purchases_user_order_date_idx
-  on purchases (user_id, order_date desc);
-create index if not exists purchases_user_return_deadline_idx
-  on purchases (user_id, return_deadline) where return_deadline is not null;
-create index if not exists purchases_user_warranty_end_idx
-  on purchases (user_id, warranty_end) where warranty_end is not null;
-create index if not exists purchases_user_category_idx
-  on purchases (user_id, category_id);
+-- Drop the previous product's tables (Purchase Ping). Confirmed no real user
+-- data exists in this project, so this is a clean cutover rather than a
+-- migration.
+drop table if exists reminders cascade;
+drop table if exists purchases cascade;
+drop table if exists receipts cascade;
+drop table if exists categories cascade;
+drop table if exists billing_events cascade;
+drop table if exists profiles cascade;
+drop function if exists public.handle_new_user cascade;
+drop function if exists public.sync_reminders cascade;
 
 create or replace function public.touch_updated_at()
 returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end;
 $$;
 
-drop trigger if exists purchases_touch on purchases;
-create trigger purchases_touch
-  before update on purchases
+-- 1. Shops ---------------------------------------------------------------
+-- One row per HVAC shop prospect/customer, tracking the funnel:
+-- prospect -> demo_booked -> attended -> payment_link_sent -> paid -> live -> subscription_active
+create table if not exists shops (
+  id uuid primary key default gen_random_uuid(),
+  business_name text not null,
+  contact_name text,
+  contact_email text,
+  contact_phone text,
+  service_area text,
+  source text,
+
+  stage text not null default 'prospect' check (
+    stage in ('prospect','demo_booked','attended','payment_link_sent','paid','live','subscription_active')
+  ),
+
+  -- Opaque token for the public /pay/[token] URL so it never exposes the
+  -- internal uuid.
+  pay_token text unique not null default encode(gen_random_bytes(16), 'hex'),
+
+  stripe_customer_id text,
+  stripe_setup_checkout_session_id text,
+  stripe_setup_payment_intent_id text,
+  stripe_subscription_id text,
+
+  -- Kept separate from `stage` so billing churn/failure states don't have
+  -- to violate the locked funnel enum above.
+  subscription_status text check (subscription_status in ('active','past_due','canceled')),
+
+  refunded boolean not null default false,
+  refunded_at timestamptz,
+
+  setup_paid_at timestamptz,
+  live_at timestamptz,
+  subscription_started_at timestamptz,
+
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists shops_stage_idx on shops (stage);
+create index if not exists shops_stripe_customer_idx on shops (stripe_customer_id) where stripe_customer_id is not null;
+
+drop trigger if exists shops_touch on shops;
+create trigger shops_touch
+  before update on shops
   for each row execute function public.touch_updated_at();
 
--- 4. Reminders ---------------------------------------------------------------
-create table if not exists reminders (
+-- 2. Payment events --------------------------------------------------------
+-- Raw Stripe webhook event log, keyed for idempotency.
+create table if not exists payment_events (
   id uuid primary key default gen_random_uuid(),
-  purchase_id uuid not null references purchases(id) on delete cascade,
-  user_id uuid not null references profiles(id) on delete cascade,
-  kind text not null check (kind in ('return','warranty')),
-  send_at date not null,
-  sent_at timestamptz,
-  unique (purchase_id, kind)
-);
-create index if not exists reminders_due_idx
-  on reminders (send_at) where sent_at is null;
-
--- Auto-create reminder rows when a purchase is inserted/updated
-create or replace function public.sync_reminders()
-returns trigger
-language plpgsql
-security definer set search_path = public
-as $$
-begin
-  -- Clear only unsent rows. For an already-sent row whose deadline is
-  -- being changed, the ON CONFLICT branch below re-arms it (resets
-  -- sent_at and updates send_at) so the user gets a reminder for the
-  -- new deadline. The trigger only fires when a deadline column
-  -- actually changes, so unrelated edits won't re-arm anything.
-  delete from reminders
-    where purchase_id = new.id and sent_at is null;
-  if new.return_deadline is not null and new.return_deadline > current_date then
-    insert into reminders (purchase_id, user_id, kind, send_at)
-    values (new.id, new.user_id, 'return', new.return_deadline - interval '3 days')
-    on conflict (purchase_id, kind) do update
-      set send_at = excluded.send_at,
-          sent_at = null
-      where reminders.send_at is distinct from excluded.send_at;
-  end if;
-  if new.warranty_end is not null and new.warranty_end > current_date then
-    insert into reminders (purchase_id, user_id, kind, send_at)
-    values (new.id, new.user_id, 'warranty', new.warranty_end - interval '14 days')
-    on conflict (purchase_id, kind) do update
-      set send_at = excluded.send_at,
-          sent_at = null
-      where reminders.send_at is distinct from excluded.send_at;
-  end if;
-  return new;
-end;
-$$;
-
-drop trigger if exists purchases_sync_reminders on purchases;
-create trigger purchases_sync_reminders
-  after insert or update of return_deadline, warranty_end on purchases
-  for each row execute function public.sync_reminders();
-
--- 5. Billing events ----------------------------------------------------------
-create table if not exists billing_events (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references profiles(id) on delete cascade,
+  shop_id uuid references shops(id) on delete set null,
   stripe_event_id text unique not null,
   type text not null,
   payload jsonb not null,
   created_at timestamptz not null default now()
 );
 
--- 6. Row Level Security ------------------------------------------------------
-alter table profiles enable row level security;
-alter table purchases enable row level security;
-alter table categories enable row level security;
-alter table reminders enable row level security;
--- billing_events is service-role only: enable RLS and add no policies
--- so the anon/authenticated roles cannot read or write Stripe payloads.
-alter table billing_events enable row level security;
+create index if not exists payment_events_shop_idx on payment_events (shop_id);
 
--- Authenticated users can read and update only their own profile row.
--- INSERT is handled by the SECURITY DEFINER handle_new_user trigger;
--- DELETE is handled by the cascade from auth.users.
-drop policy if exists "self profile" on profiles;
-drop policy if exists "profiles select self" on profiles;
-drop policy if exists "profiles update self" on profiles;
-create policy "profiles select self" on profiles
-  for select using (id = auth.uid());
-create policy "profiles update self" on profiles
-  for update using (id = auth.uid()) with check (id = auth.uid());
-
--- Billing columns must only be writable by the service role (Stripe webhook).
--- RLS row-checks alone can't restrict columns, so we revoke column-level
--- UPDATE on the billing fields from anon and authenticated. The service
--- role bypasses RLS and column grants entirely.
-revoke update (stripe_customer_id, plan, plan_renews_at)
-  on profiles from anon, authenticated;
-
-drop policy if exists "own purchases" on purchases;
-create policy "own purchases" on purchases
-  for all using (user_id = auth.uid()) with check (user_id = auth.uid());
-
-drop policy if exists "own categories read" on categories;
-create policy "own categories read" on categories
-  for select using (user_id = auth.uid() or user_id is null);
-
-drop policy if exists "own categories write" on categories;
-create policy "own categories write" on categories
-  for insert with check (user_id = auth.uid());
-
-drop policy if exists "own reminders" on reminders;
-create policy "own reminders" on reminders
-  for select using (user_id = auth.uid());
-
--- 7. Receipts (group of line items scanned from a single receipt) ------------
-create table if not exists receipts (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references profiles(id) on delete cascade,
-  merchant text,
-  order_date date not null,
-  total_cents integer not null default 0 check (total_cents >= 0),
-  currency text not null default 'USD',
-  receipt_path text,
-  created_at timestamptz not null default now()
-);
-create index if not exists receipts_user_order_date_idx
-  on receipts (user_id, order_date desc);
-create index if not exists receipts_user_merchant_idx
-  on receipts (user_id, merchant);
-alter table receipts enable row level security;
-drop policy if exists "own receipts" on receipts;
-create policy "own receipts" on receipts
-  for all using (user_id = auth.uid()) with check (user_id = auth.uid());
-
-alter table purchases
-  add column if not exists receipt_id uuid references receipts(id) on delete set null,
-  add column if not exists quantity integer not null default 1 check (quantity >= 1);
-create index if not exists purchases_receipt_idx
-  on purchases (receipt_id) where receipt_id is not null;
-create index if not exists purchases_user_merchant_idx
-  on purchases (user_id, merchant);
+-- 3. Row Level Security ------------------------------------------------------
+-- This is a single-admin internal tool, not multi-tenant: all reads/writes
+-- go through server actions using the service-role client
+-- (lib/supabase/admin.ts), which bypasses RLS. RLS is enabled with no
+-- policies on both tables so the anon/authenticated roles (used by the
+-- browser client) can never read or write shop or payment data directly.
+alter table shops enable row level security;
+alter table payment_events enable row level security;

@@ -3,9 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
-import { importCsv, type ImportResult } from "@/app/app/purchases/import/actions";
 
-export function CsvImportForm() {
+export type ImportResult =
+  | { ok: true }
+  | { ok: false; errors: string[]; helpText?: string };
+
+export function CsvImportForm({
+  action,
+}: {
+  action: (formData: FormData) => Promise<ImportResult>;
+}) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
@@ -14,7 +21,7 @@ export function CsvImportForm() {
     setSubmitting(true);
     setResult(null);
     try {
-      const r = await importCsv(formData);
+      const r = await action(formData);
       setResult(r);
     } catch (err) {
       // redirect() throws NEXT_REDIRECT — let it propagate.
@@ -50,11 +57,7 @@ export function CsvImportForm() {
       ) : null}
 
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={() => router.back()}
-        >
+        <button type="button" className="btn-secondary" onClick={() => router.back()}>
           Cancel
         </button>
         <button type="submit" disabled={submitting} className="btn-primary">
