@@ -1,23 +1,26 @@
-import { Archivo, Archivo_Black, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 
 // Marketing-only typefaces. Declared here rather than in the root layout so
 // the tracker and pay pages don't pay to download them.
-const archivo = Archivo({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-grotesk",
   display: "swap",
 });
 
-const archivoBlack = Archivo_Black({
+const instrument = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-industrial",
+  style: ["normal", "italic"],
+  variable: "--font-editorial",
   display: "swap",
 });
 
+// Used sparingly — timestamps and ticket numbers only. Never for body copy:
+// wall-to-wall monospace makes a service business read as a machine.
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500"],
   variable: "--font-code",
   display: "swap",
 });
@@ -25,7 +28,7 @@ const jetbrains = JetBrains_Mono({
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={`marketing-root ${archivo.variable} ${archivoBlack.variable} ${jetbrains.variable} min-h-screen bg-night-bg font-grotesk text-night-ink antialiased`}
+      className={`marketing-root ${dmSans.variable} ${instrument.variable} ${jetbrains.variable} min-h-screen font-grotesk text-sand-ink antialiased`}
     >
       {children}
     </div>
