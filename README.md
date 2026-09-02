@@ -38,8 +38,8 @@ pnpm dev
 
 | Path | Auth | Purpose |
 |---|---|---|
-| `/` | public | Landing page (placeholder — see RUNBOOK.md) |
-| `/demo` | public | Self-serve product demo (not yet built) |
+| `/` | public | Landing page |
+| `/demo` | public | Self-serve product demo (before/after scenario walkthrough) |
 | `/pay/[token]` | public, token-gated | Agreement summary + "Pay $2,500 setup" |
 | `/pay/[token]/success` | public, token-gated | Post-payment confirmation |
 | `/pay/[token]/cancel` | public, token-gated | Checkout canceled, retry |

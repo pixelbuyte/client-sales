@@ -24,9 +24,13 @@ Plain checklist, no UI. Fill in the actual delivery mechanism as it firms up.
 
 ## Open items
 
-- [ ] Final business/brand name → set `NEXT_PUBLIC_BUSINESS_NAME` in Vercel.
-- [ ] Public landing page (`app/page.tsx`) — currently a placeholder pending a chosen design
-      direction.
-- [ ] `/demo` page — not yet built.
+- [ ] Final business/brand name → set `NEXT_PUBLIC_BUSINESS_NAME` in Vercel. Until set, the
+      landing/pay/demo pages show a bracketed placeholder.
+- [x] Public landing page (`app/page.tsx`) — built ("Dispatch Board" direction: work-order/ticket
+      motif, warm cream + safety-orange palette matching the rest of the app). Swap directions or
+      polish copy any time — this is a first pass, not final.
+- [x] `/demo` page — built (before/after scenario walkthrough: missed night call, dead estimate).
 - [ ] Short demo video — planned via Motion (`motion_so`), generated from the `/demo` page's
-      copy once it exists. Requires Motion credits.
+      copy. Requires Motion credits.
+- [ ] Real Vercel deployment — needs a project created from the Vercel dashboard (this session's
+      Vercel access can't create projects or change project settings). See DEPLOY.md §3.
