@@ -1,0 +1,206 @@
+{
+  "title": "The 5-minute demo",
+  "brand": "The 5-minute demo",
+  "output": "05-minute-demo.mp4",
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "title",
+      "chapter": "The 5-minute demo",
+      "title": "Three nights at a shop that isn't running this.",
+      "title_html": "Three nights at a shop<br><em>that isn't running this.</em>",
+      "on_screen": ["Then the same three nights with it on.", "Same calls. Same customers. Same shop."],
+      "vo": "PLACEHOLDER",
+      "min_s": 8
+    },
+    {
+      "id": "night-call",
+      "layout": "clock",
+      "chapter": "01 · Missed night call",
+      "title": "Tuesday, 9:14 pm.",
+      "on_screen": ["A no-heat call after the office has closed.", "Nobody is at the desk.", "The customer does not leave a voicemail. Almost nobody does."],
+      "sfx": "ring",
+      "data": { "time": "9:14 PM", "screen": "INCOMING\n(617) 555-0142\nQuincy, MA", "house": true },
+      "vo": "PLACEHOLDER",
+      "min_s": 10
+    },
+    {
+      "id": "night-without",
+      "layout": "beats",
+      "chapter": "01 · Missed night call",
+      "title": "Without this.",
+      "on_screen": [],
+      "data": {
+        "columns": [
+          { "label": "Without this", "tone": "bad", "beats": [
+            { "t": "9:14 pm", "who": "Customer", "text": "Calls the shop line. Rings out after six rings.", "tone": "neutral" },
+            { "t": "9:14 pm", "who": "Customer", "text": "Hangs up. No voicemail left.", "tone": "neutral" },
+            { "t": "9:23 pm", "who": "Customer", "text": "Searches “emergency furnace repair near me.” Calls the next shop.", "tone": "bad" },
+            { "t": "Next morning", "who": "Your shop", "text": "Sees one missed call with no name and no context. Nobody calls back.", "tone": "bad" }
+          ]},
+          { "label": "With recovery running", "tone": "good", "beats": [
+            { "t": "9:14 pm", "who": "Customer", "text": "Calls the shop line. Rings out after six rings.", "tone": "neutral" },
+            { "t": "9:14 pm", "who": "Recovery", "text": "Missed call detected. Text goes out four seconds later.", "tone": "good" },
+            { "t": "9:15 pm", "who": "Customer", "text": "Replies: “No heat at all, house is 54. Can someone come tomorrow?”", "tone": "neutral" },
+            { "t": "9:15 pm", "who": "Recovery", "text": "Not flagged life-safety, so it's booked rather than escalated. Offers morning windows.", "tone": "good" },
+            { "t": "9:17 pm", "who": "Customer", "text": "Takes the 7:30–9:30 am window. Confirmed.", "tone": "good" },
+            { "t": "7:02 am", "who": "Your shop", "text": "Job is on the board with the address, the symptom, and the whole thread.", "tone": "good" }
+          ]}
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "night-thread",
+      "layout": "thread",
+      "chapter": "01 · Missed night call",
+      "title": "What actually goes out.",
+      "on_screen": ["Every message here is the real wording.", "Written with you on the configuration call."],
+      "data": {
+        "header": "After-hours line · (617) 555-0142",
+        "time": "9:14 pm",
+        "messages": [
+          { "from": "sys", "text": "Missed call · text sent 4 seconds later" },
+          { "from": "shop", "text": "Sorry we missed your call — this is the after-hours line for [your shop]. Is this an emergency, or can we get you on the schedule for tomorrow?" },
+          { "from": "them", "text": "No heat at all, house is 54. Can someone come tomorrow?" },
+          { "from": "shop", "text": "We can. First openings tomorrow are 7:30–9:30am or 11am–1pm. Which works? If it drops below 50 tonight, text back URGENT and we'll escalate." },
+          { "from": "them", "text": "7:30 please" },
+          { "from": "shop", "text": "Booked — 7:30–9:30am, and we've got your address from the number on file. You'll get a text when the tech is on the way." }
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "estimate-beats",
+      "layout": "beats",
+      "chapter": "02 · Dead estimate",
+      "title": "Nine days after the quote.",
+      "on_screen": ["You quoted a system replacement.", "They didn't say no. They went quiet."],
+      "data": {
+        "columns": [
+          { "label": "Without this", "tone": "bad", "beats": [
+            { "t": "Day 0", "who": "Your shop", "text": "Sends a written estimate for a full system replacement.", "tone": "neutral" },
+            { "t": "Day 3", "who": "Customer", "text": "Reads it. Means to reply. Doesn't.", "tone": "neutral" },
+            { "t": "Day 9", "who": "Your shop", "text": "Nobody follows up. The quote is in a folder now.", "tone": "bad" },
+            { "t": "Day 30", "who": "Customer", "text": "Goes with whoever followed up. You never find out why you lost it.", "tone": "bad" }
+          ]},
+          { "label": "With recovery running", "tone": "good", "beats": [
+            { "t": "Day 0", "who": "Your shop", "text": "Sends the same written estimate.", "tone": "neutral" },
+            { "t": "Day 3", "who": "Recovery", "text": "Automatic check-in: any questions on the quote?", "tone": "good" },
+            { "t": "Day 3", "who": "Customer", "text": "Replies: “Waiting to hear about financing.”", "tone": "good" },
+            { "t": "Day 9", "who": "Recovery", "text": "Second touch, now that there's a real objection on the table.", "tone": "good" },
+            { "t": "Day 10", "who": "Your shop", "text": "You answer the financing question yourself and close it — or you get a clean no and stop guessing.", "tone": "good" }
+          ]}
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "estimate-thread",
+      "layout": "thread",
+      "chapter": "02 · Dead estimate",
+      "title": "The follow-up, word for word.",
+      "on_screen": ["Day 3. Then day 9.", "You hear a yes, a no, or an objection you can answer."],
+      "data": {
+        "header": "Estimate follow-up · replacement quote",
+        "time": "Day 3",
+        "messages": [
+          { "from": "shop", "text": "Hi — following up on the replacement quote we sent Tuesday. Any questions on it, or anything you'd want priced differently?" },
+          { "from": "them", "text": "Still waiting to hear back about financing before we decide" },
+          { "from": "shop", "text": "Understood. Want me to have someone walk you through the payment options we work with? Takes about five minutes and might move it along." },
+          { "from": "them", "text": "Yeah that would help actually" }
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "saturday",
+      "layout": "beats",
+      "chapter": "03 · Saturday overflow",
+      "title": "Saturday, 11:40 am.",
+      "on_screen": ["Everyone is on a job.", "Three calls stack up in twenty minutes."],
+      "data": {
+        "columns": [
+          { "label": "Without this", "tone": "bad", "beats": [
+            { "t": "11:40 am", "who": "Caller 1", "text": "Gets through. Booked.", "tone": "good" },
+            { "t": "11:47 am", "who": "Caller 2", "text": "Busy signal. Hangs up.", "tone": "bad" },
+            { "t": "11:52 am", "who": "Caller 3", "text": "Rings out. Hangs up.", "tone": "bad" },
+            { "t": "Monday", "who": "Your shop", "text": "Two numbers in the missed list. No context, no names, nobody calls them.", "tone": "bad" }
+          ]},
+          { "label": "With recovery running", "tone": "good", "beats": [
+            { "t": "11:40 am", "who": "Caller 1", "text": "Gets through. Booked as normal.", "tone": "good" },
+            { "t": "11:47 am", "who": "Recovery", "text": "Caller 2 texted back immediately. Books Monday 8am.", "tone": "good" },
+            { "t": "11:52 am", "who": "Recovery", "text": "Caller 3 texted back. Says it's a leak — flagged urgent.", "tone": "good" },
+            { "t": "11:55 am", "who": "Your shop", "text": "You see the urgent flag and route it. The other is already on Monday's board.", "tone": "good" }
+          ]}
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "recap",
+      "layout": "recap",
+      "chapter": "What you see",
+      "title": "One email a week.",
+      "on_screen": ["That's the whole reporting.", "No dashboard to check. No login to remember."],
+      "data": {
+        "week": "example week",
+        "rows": [
+          { "k": "After-hours calls texted back", "v": "9" },
+          { "k": "Booked from those", "v": "4" },
+          { "k": "Estimates checked in on", "v": "6" },
+          { "k": "Replies you can act on", "v": "3" },
+          { "k": "Flagged urgent and routed", "v": "1" }
+        ]
+      },
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "four-answers",
+      "layout": "list",
+      "chapter": "Your side of it",
+      "title": "Four answers. That's the setup.",
+      "on_screen": ["Everything else is on us.", "No install. No migration. Nothing your techs have to learn."],
+      "data": { "items": [
+        { "t": "Your main line", "d": "The number customers actually call. It stays yours and stays where it is." },
+        { "t": "Your hours", "d": "When someone is genuinely at the desk, so we know where the gap starts." },
+        { "t": "What counts as urgent", "d": "No heat below a certain temp, water, elderly or infant in the house. Your call, not ours." },
+        { "t": "How estimates go out", "d": "Email, text, paper. So the follow-up matches how you already work." }
+      ]},
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "after-yes",
+      "layout": "list",
+      "chapter": "The order things happen",
+      "title": "After you say yes.",
+      "on_screen": ["No pay link before a yes on a call.", "The monthly begins the day you go live. Not before."],
+      "data": { "items": [
+        { "n": "01", "t": "You say yes on the call", "d": "Only then do we send a payment link. Never before." },
+        { "n": "02", "t": "Setup fee clears", "d": "$2,500, paid in full. Work starts after it clears." },
+        { "n": "03", "t": "Configuration call", "d": "The four answers, plus we write the message wording together." },
+        { "n": "04", "t": "We test it with you", "d": "You call your own line and hear exactly what your customers will hear." },
+        { "n": "05", "t": "Go live", "d": "It starts catching calls. This is the day the $750 a month begins." }
+      ]},
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "pricing",
+      "layout": "pricing",
+      "chapter": "Pricing",
+      "title": "Two numbers. No surprises.",
+      "on_screen": ["Setup covers the build, the configuration, and testing it with you.", "Monthly. Cancel any time."],
+      "vo": "PLACEHOLDER"
+    },
+    {
+      "id": "close",
+      "layout": "title",
+      "chapter": "Next step",
+      "title": "Sound like your shop?",
+      "title_html": "Sound like your shop?",
+      "on_screen": ["Next step is a fifteen-minute call.", "Reply to the email that sent you here."],
+      "vo": "PLACEHOLDER",
+      "min_s": 10
+    }
+  ]
+}
