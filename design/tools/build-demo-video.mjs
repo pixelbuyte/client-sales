@@ -334,5 +334,5 @@ console.log(r.stdout.trim());
 
 const ffmpeg = execFileSync("python3", ["-c", "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"]).toString().trim();
 const final = path.join(outDir, sb.output || "demo.mp4");
-execFileSync(ffmpeg, ["-y", "-v", "error", "-i", silent, "-i", track, "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-shortest", "-movflags", "+faststart", final], { stdio: "inherit" });
+execFileSync(ffmpeg, ["-y", "-v", "error", "-i", silent, "-i", track, "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000", "-shortest", "-movflags", "+faststart", final], { stdio: "inherit" });
 console.log("wrote", final);
