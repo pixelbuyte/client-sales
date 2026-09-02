@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledger</title>
+<link rel="stylesheet" href="../fonts/bricolage.css"><link rel="stylesheet" href="../fonts/plexsans.css"><link rel="stylesheet" href="../fonts/plexmono.css">
+<style>
+  :root{
+    --bg:#F3F7F5; --surface:#FFFFFF; --raised:#EDF3EF; --line:#CFDCD5; --ink:#10231C; --muted:#4E6359;
+    --green:#1F8A5B; --green-deep:#0F3D2C; --green-soft:#DDF1E6; --trust:#1E5F8C; --cta:#F08A24; --missed:#C0392B;
+    --display:"Bricolage Grotesque",system-ui,sans-serif; --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:15px;color:var(--green-deep)}
+  .brand b{display:grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--green-deep);color:#fff}
+  .links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--muted);font-weight:500}
+  .btn{display:inline-block;background:var(--cta);color:#10231C;font-weight:600;border-radius:8px;padding:12px 22px;text-decoration:none;box-shadow:0 8px 22px rgba(240,138,36,.28)}
+  .btn.sm{padding:9px 16px;font-size:14px}
+  .hero{padding:72px 0 80px;border-bottom:1px solid var(--line)}
+  .hero .wrap{display:grid;grid-template-columns:6fr 5fr;gap:56px;align-items:center}
+  .tally{background:var(--green-deep);color:#fff;border-radius:16px;padding:28px;box-shadow:0 20px 50px rgba(15,61,44,.28);font-family:var(--mono)}
+  .tally .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9CCDB5}
+  .tally .big{font-family:var(--display);font-weight:700;font-size:72px;line-height:1;margin-top:8px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .tally .sub{font-size:12px;color:#9CCDB5;margin-top:6px}
+  .lines{margin-top:22px;border-top:1px solid rgba(255,255,255,.15)}
+  .line{display:grid;grid-template-columns:70px 1fr auto;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.10);font-size:13px;align-items:baseline}
+  .line .t{color:#9CCDB5}
+  .line .d{font-family:var(--sans)}
+  .line .d small{display:block;color:#9CCDB5;font-size:12px}
+  .line .v{color:#5FE0A0;font-weight:600;font-variant-numeric:tabular-nums}
+  .line .v.lost{color:#F19C90;text-decoration:line-through;font-weight:400}
+  .tally .foot{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;color:#9CCDB5}
+  .tally .foot b{color:#fff}
+  .eyebrow{font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:.06em}
+  h1{font-family:var(--display);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.025em;margin:18px 0 0;text-wrap:balance}
+  h1 span{color:var(--green)}
+  .lede{max-width:44ch;color:var(--muted);font-size:17px;margin-top:22px}
+  .cta-row{display:flex;gap:16px;align-items:center;margin-top:32px;font-size:13px;color:var(--muted)}
+  .fine{margin-top:14px;font-size:13px;color:var(--muted)}
+  .art{margin-top:28px}
+  .art svg{width:100%;max-width:520px;height:auto;display:block}
+  section.body{padding:80px 0;border-bottom:1px solid var(--line)}
+  h2{font-family:var(--display);font-weight:700;font-size:40px;line-height:1.05;margin:12px 0 0;max-width:22ch;text-wrap:balance;letter-spacing:-.02em}
+  .math{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .math .head{padding:12px 20px;background:var(--raised);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line)}
+  .math .r{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .math .r small{display:block;color:var(--muted);font-size:13px}
+  .math .r .v{font-family:var(--mono);font-size:18px;color:var(--muted)}
+  .math .total{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:var(--green-soft);border-top:2px solid var(--green)}
+  .math .total .v{font-family:var(--display);font-weight:700;font-size:34px;color:var(--green);font-variant-numeric:tabular-nums}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px}
+  .card .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .amt{font-family:var(--display);font-weight:700;font-size:64px;line-height:1;margin-top:10px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .amt.mo{color:var(--green)}
+  .card p{color:var(--muted);font-size:15px;margin:14px 0 0}
+  .nots{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:36px}
+  .nots div{background:var(--surface);padding:20px 22px;font-size:15px}
+  .nots b{display:block;font-family:var(--display);font-weight:700;font-size:18px;margin-bottom:4px}
+  .nots b::before{content:"✕ ";color:var(--missed)}
+  .nots p{margin:0;color:var(--muted);font-size:14px}
+  footer{padding:28px 0;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap"><nav>
+  <div class="brand"><b>H</b> Northeast Call Recovery</div>
+  <div class="links"><span>Run the numbers</span><span>Pricing</span><a class="btn sm" href="#">See the demo</a></div>
+</nav></div>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <div class="eyebrow">// missed-call + dead-estimate recovery · eastern MA</div>
+    <h1>One recovered job pays for the <span>whole month.</span></h1>
+    <p class="lede">A no-heat call after hours is worth $300 to $450. A replacement quote that went quiet is worth $8,000 or more. We put both back on your schedule, and the monthly is priced below one of them.</p>
+    <div class="cta-row"><a class="btn" href="#">Watch the 5-min demo</a> then a 15-minute call</div>
+    <p class="fine">No signup. No app for your techs. The monthly doesn't start until you're live.</p>
+    <div class="art">
+      <!-- Cartoon: a leaky bucket (calls draining out) being patched, coins going back in -->
+      <svg viewBox="0 0 520 170" role="img" aria-label="A bucket of jobs with two leaks, and the leaks patched">
+        <g transform="translate(20,10)">
+          <path d="M20 20 h120 l-14 120 h-92z" fill="#fff" stroke="#10231C" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="14" y="14" width="132" height="12" rx="4" fill="#1E5F8C"/>
+          <path d="M34 40 h92 l-10 90 h-72z" fill="#DDF1E6"/>
+          <text x="80" y="90" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="14" fill="#0F3D2C">YOUR CALLS</text>
+          <!-- leaks -->
+          <g stroke="#C0392B" stroke-width="3" stroke-linecap="round"><line x1="132" y1="70" x2="150" y2="84"/><line x1="128" y1="100" x2="146" y2="116"/></g>
+          <g fill="#C0392B"><circle cx="156" cy="92" r="4"/><circle cx="152" cy="126" r="4"/><circle cx="164" cy="140" r="3"/></g>
+          <text x="172" y="86" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C0392B">9:14 pm, missed</text>
+          <text x="172" y="128" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C0392B">quote, no reply</text>
+        </g>
+        <path d="M270 80 h50" stroke="#4E6359" stroke-width="2" stroke-dasharray="4 4"/><path d="M316 74 l8 6 -8 6" stroke="#4E6359" stroke-width="2" fill="none"/>
+        <g transform="translate(340,10)">
+          <path d="M20 20 h120 l-14 120 h-92z" fill="#fff" stroke="#10231C" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="14" y="14" width="132" height="12" rx="4" fill="#1E5F8C"/>
+          <path d="M34 40 h92 l-10 90 h-72z" fill="#1F8A5B"/>
+          <text x="80" y="90" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="14" fill="#fff">BOOKED</text>
+          <!-- patches -->
+          <rect x="122" y="62" width="22" height="16" rx="3" fill="#F08A24" transform="rotate(35 133 70)"/>
+          <rect x="118" y="94" width="22" height="16" rx="3" fill="#F08A24" transform="rotate(35 129 102)"/>
+          <!-- coins dropping in -->
+          <g fill="#F5C36B" stroke="#B8842B" stroke-width="1.5"><circle cx="60" cy="0" r="7"/><circle cx="84" cy="-8" r="7"/><circle cx="104" cy="4" r="7"/></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="tally">
+    <div class="lbl">Recovered this month · example shop</div>
+    <div class="big">$11,420</div>
+    <div class="sub">3 after-hours calls booked · 1 replacement quote closed</div>
+    <div class="lines">
+      <div class="line"><span class="t">Tue 9:14p</span><span class="d">Dana R., Quincy<small>no-heat call, booked 7:30 am</small></span><span class="v">$385</span></div>
+      <div class="line"><span class="t">Tue 11:41p</span><span class="d">Marcus T., Weymouth<small>no heat, newborn, escalated</small></span><span class="v">$420</span></div>
+      <div class="line"><span class="t">Thu 6:30a</span><span class="d">Joanne P., Milton<small>replacement quote, day 9 check-in</small></span><span class="v">$10,200</span></div>
+      <div class="line"><span class="t">Sat 2:10p</span><span class="d">R. Okafor, Braintree<small>AC out, booked Monday</small></span><span class="v">$415</span></div>
+      <div class="line"><span class="t">Sun 8:52p</span><span class="d">unknown, Hingham<small>rang out, no text back (before)</small></span><span class="v lost">$0</span></div>
+    </div>
+    <div class="foot"><span>Monthly, once live</span><b>$750</b></div>
+  </div>
+</div></header>
+
+<section class="body"><div class="wrap">
+  <div class="eyebrow">// run your own numbers</div>
+  <h2>Don't take our figures. Use yours.</h2>
+  <div class="math">
+    <div class="head">Worked example · swap in your own ticket values</div>
+    <div class="r"><div>A no-heat service call, after hours<small>example: $300–450</small></div><span class="v">$_____</span></div>
+    <div class="r"><div>A system replacement you'd have lost<small>example: $8,000–14,000</small></div><span class="v">$_____</span></div>
+    <div class="r"><div>Recovered calls in a typical month<small>you'll see this in the weekly recap</small></div><span class="v">_____</span></div>
+    <div class="total"><span>What this costs you monthly, once live</span><span class="v">$750</span></div>
+  </div>
+</div></section>
+
+<section class="body"><div class="wrap">
+  <div class="eyebrow">// pricing</div>
+  <h2>Two numbers. No surprises.</h2>
+  <div class="two">
+    <div class="card"><div class="lbl">One-time setup</div><div class="amt">$2,500</div><p>Paid in full before any work starts. Covers the build, the configuration around your shop, and testing it with you until it's right.</p></div>
+    <div class="card"><div class="lbl">Then, monthly</div><div class="amt mo">$750</div><p>Starts the day your system goes live, not the day you sign. Cancel any time.</p><p style="margin-top:22px"><a class="btn sm" href="#">Watch the demo first</a></p></div>
+  </div>
+</div></section>
+
+<section class="body" style="border-bottom:0"><div class="wrap">
+  <div class="eyebrow">// straight answers</div>
+  <h2>What this isn't</h2>
+  <div class="nots">
+    <div><b>Not an answering service</b><p>Nobody is pretending to be your front desk.</p></div>
+    <div><b>Not a new CRM</b><p>Whatever you run jobs on today, you keep.</p></div>
+    <div><b>Not an app for your techs</b><p>Nothing to install, nothing to log into.</p></div>
+    <div><b>Not a marketing retainer</b><p>Recovery, not acquisition.</p></div>
+    <div><b>Not a long contract</b><p>Monthly. Stop when it stops paying for itself.</p></div>
+    <div><b>Not sold as “AI”</b><p>You're buying recovered jobs.</p></div>
+  </div>
+</div></section>
+
+<div class="wrap"><footer><span>NORTHEAST CALL RECOVERY · Greater Boston and eastern Massachusetts</span><span>Demo · Privacy · Terms</span></footer></div>
+</body>
+</html>
