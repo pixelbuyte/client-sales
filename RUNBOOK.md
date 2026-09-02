@@ -24,8 +24,9 @@ Plain checklist, no UI. Fill in the actual delivery mechanism as it firms up.
 
 ## Open items
 
-- [ ] Final business/brand name → set `NEXT_PUBLIC_BUSINESS_NAME` in Vercel. Until set, the
-      landing/pay/demo pages show a bracketed placeholder.
+- [x] Business/brand name — defaults to **Afterline** in `lib/business.ts`, with a ticket-stub
+      logo mark on the marketing nav/footer, tracker sidebar, and login page. Set
+      `NEXT_PUBLIC_BUSINESS_NAME` in Vercel only if the name changes.
 - [x] Public landing page (`app/page.tsx`) — built ("Dispatch Board" direction: work-order/ticket
       motif, warm cream + safety-orange palette matching the rest of the app). Swap directions or
       polish copy any time — this is a first pass, not final.
