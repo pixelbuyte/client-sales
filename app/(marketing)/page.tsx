@@ -1,4 +1,10 @@
 import Link from "next/link";
+import {
+  CalendarCheck,
+  MessageSquareText,
+  PhoneMissed,
+  ShieldCheck,
+} from "lucide-react";
 import { BUSINESS_NAME } from "@/lib/business";
 import { JobTickets } from "@/components/marketing/JobTickets";
 
@@ -13,6 +19,7 @@ export default function HomePage() {
     <>
       <Nav />
       <Hero />
+      <ProofStrip />
       <TheGap />
       <WhatWeRecover />
       <HowItWorks />
@@ -31,32 +38,32 @@ export default function HomePage() {
 
 function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-sand-line/80 bg-sand-bg/70 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-sea-line/80 bg-sea-bg/75 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded bg-clay font-serif text-[13px] text-sand-surface">
+          <span className="grid h-7 w-7 place-items-center rounded-md bg-ocean font-serif text-[14px] text-white">
             H
           </span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
             {BUSINESS_NAME}
           </span>
         </Link>
         <nav className="flex items-center gap-5">
           <Link
             href="#how"
-            className="hidden text-[13px] font-medium text-sand-muted transition-colors hover:text-sand-ink sm:block"
+            className="hidden text-[13px] font-medium text-sea-muted transition-colors hover:text-sea-ink sm:block"
           >
             How it works
           </Link>
           <Link
             href="#pricing"
-            className="hidden text-[13px] font-medium text-sand-muted transition-colors hover:text-sand-ink sm:block"
+            className="hidden text-[13px] font-medium text-sea-muted transition-colors hover:text-sea-ink sm:block"
           >
             Pricing
           </Link>
           <Link
             href="/demo"
-            className="rounded-lg bg-clay px-3.5 py-2 text-[14px] font-semibold text-sand-surface transition-colors hover:bg-clay-hover"
+            className="btn-cta rounded-lg bg-cta px-3.5 py-2 text-[14px] font-semibold text-ocean-deep hover:bg-cta-hover"
           >
             See the demo
           </Link>
@@ -70,26 +77,26 @@ function Nav() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-sand-line">
+    <section className="night-band relative overflow-hidden text-white">
       <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-14 md:pb-24 md:pt-20">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
           <div>
-            <div className="hero-1 inline-flex items-center gap-2 rounded-full border border-clay/35 px-3 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-clay" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-clay">
+            <div className="hero-1 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-ocean-muted" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-ocean-muted">
                 Greater Boston · eastern MA
               </span>
             </div>
 
-            <h1 className="hero-2 mt-6 font-serif text-[2.9rem] leading-[1.02] tracking-[-0.01em] text-sand-ink sm:text-6xl">
+            <h1 className="hero-2 mt-6 font-serif text-[2.9rem] leading-[1.02] tracking-[-0.01em] text-white sm:text-6xl">
               Your phone rang
               <br />
               at 9:14 pm.
               <br />
-              <span className="text-clay">Nobody picked up.</span>
+              <span className="italic text-ocean-muted">Nobody picked up.</span>
             </h1>
 
-            <p className="hero-3 mt-6 max-w-md text-[1.05rem] leading-relaxed text-sand-muted">
+            <p className="hero-3 mt-6 max-w-md text-[1.05rem] leading-relaxed text-white/75">
               That was a no-heat call in Quincy. It went to the next shop in the search results
               nine minutes later. We put those calls — and the estimates that went quiet — back
               on your schedule.
@@ -98,24 +105,78 @@ function Hero() {
             <div className="hero-4 mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href="/demo"
-                className="rounded-lg bg-clay px-6 py-3.5 text-[15px] font-semibold text-sand-surface transition-colors hover:bg-clay-hover"
+                className="btn-cta rounded-lg bg-cta px-6 py-3.5 text-[15px] font-semibold text-ocean-deep hover:bg-cta-hover"
               >
                 Watch the 5-min demo
               </Link>
-              <span className="text-[13px] text-sand-muted">
-                then a 15-minute call
-              </span>
+              <span className="text-[13px] text-white/60">then a 15-minute call</span>
             </div>
 
-            <p className="hero-4 mt-4 text-[13px] text-sand-muted/70">
-              No signup. No app for your techs. No contract to read tonight.
-            </p>
+            <ul className="hero-4 mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-white/65">
+              {["No signup", "No app for your techs", "Monthly starts at go-live", "Cancel any time"].map(
+                (t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <Tick className="text-stamp-booked" />
+                    {t}
+                  </li>
+                ),
+              )}
+            </ul>
           </div>
 
           <div className="hero-5">
             <JobTickets />
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- proof --- */
+
+const PROOF = [
+  {
+    icon: MessageSquareText,
+    k: "4 seconds",
+    v: "from missed call to a text back",
+  },
+  {
+    icon: PhoneMissed,
+    k: "15 hours",
+    v: "your line rings out, every weekday",
+  },
+  {
+    icon: CalendarCheck,
+    k: "Days, not months",
+    v: "from setup fee to live",
+  },
+  {
+    icon: ShieldCheck,
+    k: "$0 until live",
+    v: "the monthly starts at go-live, not signing",
+  },
+];
+
+function ProofStrip() {
+  return (
+    <section className="border-b border-sea-line bg-sea-surface/70">
+      <div className="mx-auto grid max-w-6xl gap-px divide-sea-line px-5 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x">
+        {PROOF.map((p, i) => (
+          <div
+            key={p.k}
+            className="tally-in flex items-start gap-3 py-5 lg:px-5 lg:first:pl-0 lg:last:pr-0"
+            style={{ animationDelay: `${0.5 + i * 0.08}s` }}
+          >
+            <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md bg-trust-soft text-trust">
+              <p.icon size={16} strokeWidth={2} />
+            </span>
+            <div>
+              <div className="font-serif text-[1.3rem] leading-none text-sea-ink">{p.k}</div>
+              <div className="mt-1 text-[13px] text-sea-muted">{p.v}</div>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -155,15 +216,15 @@ function TheGap() {
     <Section
       eyebrow="The gap"
       title="Your office is open nine hours. Your phone isn't."
-      lede="Furnaces don't fail on a schedule. Neither do the calls. Everything outside the lit band is a call your team has to catch later — or not at all."
+      lede="Furnaces don't fail on a schedule. Neither do the calls. Everything in the dark band is a call your team has to catch later — or not at all."
     >
-      <div className="rounded-ticket border border-sand-line bg-sand-surface shadow-ticket p-5 sm:p-7">
+      <div className="rounded-ticket border border-sea-line bg-sea-surface p-5 shadow-ticket sm:p-7">
         <div className="flex gap-[3px]">
           {HOURS.map((slot) => (
             <div key={slot.h} className="flex-1">
               <div
                 className={`h-20 rounded-sm transition-colors sm:h-24 ${
-                  slot.open ? "bg-clay/85" : "bg-sand-line/70"
+                  slot.open ? "bg-trust" : "bg-ocean/90"
                 }`}
                 title={slot.open ? `${slot.h} — office open` : `${slot.h} — after hours`}
               />
@@ -175,7 +236,7 @@ function TheGap() {
             <div key={slot.h} className="flex-1 text-center">
               <span
                 className={`font-code text-[9px] tabular-nums ${
-                  i % 3 === 0 ? "text-sand-muted" : "text-transparent"
+                  i % 3 === 0 ? "text-sea-muted" : "text-transparent"
                 }`}
               >
                 {slot.h}
@@ -184,8 +245,8 @@ function TheGap() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-4 border-t border-sand-line pt-5 sm:grid-cols-3">
-          <Stat k="9 hours" v="Someone is at the desk" tone="clay" />
+        <div className="mt-6 grid gap-4 border-t border-sea-line pt-5 sm:grid-cols-3">
+          <Stat k="9 hours" v="Someone is at the desk" tone="trust" />
           <Stat k="15 hours" v="Rings out, every weekday" tone="lost" />
           <Stat k="All weekend" v="Plus holidays and storm days" tone="lost" />
         </div>
@@ -194,17 +255,17 @@ function TheGap() {
   );
 }
 
-function Stat({ k, v, tone }: { k: string; v: string; tone: "clay" | "lost" }) {
+function Stat({ k, v, tone }: { k: string; v: string; tone: "trust" | "lost" }) {
   return (
     <div>
       <div
         className={`font-serif text-[1.9rem] leading-none ${
-          tone === "clay" ? "text-clay" : "text-stamp-missed"
+          tone === "trust" ? "text-trust" : "text-stamp-missed"
         }`}
       >
         {k}
       </div>
-      <div className="mt-1 text-sm text-sand-muted">{v}</div>
+      <div className="mt-1 text-sm text-sea-muted">{v}</div>
     </div>
   );
 }
@@ -256,16 +317,16 @@ function Panel({
   points: string[];
 }) {
   return (
-    <div className="rounded-ticket border border-sand-line bg-sand-surface shadow-ticket p-6 sm:p-7">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-clay">{index}</div>
-      <h3 className="mt-3 font-serif text-[1.45rem] leading-snug text-sand-ink sm:text-2xl">
+    <div className="rounded-ticket border border-sea-line bg-sea-surface p-6 shadow-ticket sm:p-7">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-trust">{index}</div>
+      <h3 className="mt-3 font-serif text-[1.45rem] leading-snug text-sea-ink sm:text-2xl">
         {title}
       </h3>
-      <p className="mt-3 text-sm leading-relaxed text-sand-muted">{body}</p>
-      <ul className="mt-5 space-y-2.5 border-t border-sand-line pt-5">
+      <p className="mt-3 text-sm leading-relaxed text-sea-muted">{body}</p>
+      <ul className="mt-5 space-y-2.5 border-t border-sea-line pt-5">
         {points.map((p) => (
-          <li key={p} className="flex gap-3 text-sm text-sand-ink/90">
-            <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-clay" />
+          <li key={p} className="flex gap-3 text-sm text-sea-ink/90">
+            <Tick className="mt-[3px] shrink-0 text-stamp-booked" />
             {p}
           </li>
         ))}
@@ -307,16 +368,14 @@ function HowItWorks() {
       title="Four steps. You do almost none of them."
       lede="Setup is on us. The only thing we need from you is one call and a couple of answers."
     >
-      <ol className="grid gap-px overflow-hidden rounded-ticket border border-sand-line shadow-ticket bg-sand-line md:grid-cols-2">
+      <ol className="grid gap-px overflow-hidden rounded-ticket border border-sea-line bg-sea-line shadow-ticket md:grid-cols-2">
         {STEPS.map((s) => (
-          <li key={s.n} className="bg-sand-surface p-6 sm:p-7">
-            <div className="text-[13px] font-semibold text-clay">
+          <li key={s.n} className="bg-sea-surface p-6 sm:p-7">
+            <div className="inline-grid h-8 w-8 place-items-center rounded-full bg-trust-soft font-code text-[12px] font-medium text-trust">
               {s.n}
             </div>
-            <h3 className="mt-3 font-serif text-[1.3rem] leading-snug text-sand-ink">
-              {s.t}
-            </h3>
-            <p className="mt-2.5 text-sm leading-relaxed text-sand-muted">{s.d}</p>
+            <h3 className="mt-4 font-serif text-[1.3rem] leading-snug text-sea-ink">{s.t}</h3>
+            <p className="mt-2.5 text-sm leading-relaxed text-sea-muted">{s.d}</p>
           </li>
         ))}
       </ol>
@@ -333,21 +392,29 @@ function RunTheNumbers() {
       title="One recovered job is the whole conversation."
       lede="Don't take our figures — use yours. Fill in what a job is actually worth at your shop and the math answers itself."
     >
-      <div className="overflow-hidden rounded-ticket border border-sand-line bg-sand-surface shadow-ticket">
-        <div className="border-b border-sand-line bg-sand-raised px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+      <div className="overflow-hidden rounded-ticket border border-sea-line bg-sea-surface shadow-ticket">
+        <div className="border-b border-sea-line bg-sea-raised px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
           Worked example — swap in your own ticket values
         </div>
-        <div className="divide-y divide-sand-line">
+        <div className="divide-y divide-sea-line">
           <Row label="A no-heat service call, after hours" value="$_____" hint="example: $300–450" />
-          <Row label="A system replacement you'd have lost" value="$_____" hint="example: $8,000–14,000" />
-          <Row label="Recovered calls in a typical month" value="_____" hint="you'll see this in the weekly recap" />
+          <Row
+            label="A system replacement you'd have lost"
+            value="$_____"
+            hint="example: $8,000–14,000"
+          />
+          <Row
+            label="Recovered calls in a typical month"
+            value="_____"
+            hint="you'll see this in the weekly recap"
+          />
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-clay/40 bg-clay/6 px-5 py-4">
-          <span className="text-sm text-sand-ink">What this costs you monthly, once live</span>
-          <span className="font-serif text-[1.9rem] leading-none text-clay">$750</span>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-trust/40 bg-trust-soft/60 px-5 py-4">
+          <span className="text-sm text-sea-ink">What this costs you monthly, once live</span>
+          <span className="font-serif text-[1.9rem] leading-none text-trust">$750</span>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-relaxed text-sand-muted">
+      <p className="mt-4 text-sm leading-relaxed text-sea-muted">
         We're not going to pretend to know your close rate or your average ticket. The point is
         simply that the monthly is priced below one recovered job for most shops your size — and
         if it isn&apos;t, you should not buy this.
@@ -360,10 +427,10 @@ function Row({ label, value, hint }: { label: string; value: string; hint: strin
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4">
       <div>
-        <div className="text-sm text-sand-ink">{label}</div>
-        <div className="mt-0.5 text-[13px] text-sand-muted/70">{hint}</div>
+        <div className="text-sm text-sea-ink">{label}</div>
+        <div className="mt-0.5 text-[13px] text-sea-muted/70">{hint}</div>
       </div>
-      <span className="font-code text-lg tabular-nums text-sand-muted">{value}</span>
+      <span className="font-code text-lg tabular-nums text-sea-muted">{value}</span>
     </div>
   );
 }
@@ -386,16 +453,14 @@ function WhatThisIsNot() {
       title="What this isn't"
       lede="You've been pitched before. Here's what we're not asking you to sign up for."
     >
-      <div className="grid gap-px overflow-hidden rounded-ticket border border-sand-line shadow-ticket bg-sand-line sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-px overflow-hidden rounded-ticket border border-sea-line bg-sea-line shadow-ticket sm:grid-cols-2 lg:grid-cols-3">
         {NOTS.map((n) => (
-          <div key={n.t} className="bg-sand-surface p-5">
+          <div key={n.t} className="bg-sea-surface p-5">
             <div className="flex items-baseline gap-2">
               <span className="text-sm text-stamp-missed">✕</span>
-              <h3 className="font-serif text-[1.15rem] leading-snug text-sand-ink">
-                {n.t}
-              </h3>
+              <h3 className="font-serif text-[1.15rem] leading-snug text-sea-ink">{n.t}</h3>
             </div>
-            <p className="mt-2 pl-6 text-sm leading-relaxed text-sand-muted">{n.d}</p>
+            <p className="mt-2 pl-6 text-sm leading-relaxed text-sea-muted">{n.d}</p>
           </div>
         ))}
       </div>
@@ -413,45 +478,51 @@ function Pricing() {
       title="Two numbers. No surprises."
       lede="Setup is paid in full before we start work. The monthly doesn't begin until your system is actually live."
     >
-      <div className="overflow-hidden rounded-ticket border border-sand-line bg-sand-surface shadow-ticket">
-        <div className="flex items-center justify-between border-b border-dashed border-sand-line bg-sand-raised px-5 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+      <div className="overflow-hidden rounded-ticket border border-sea-line bg-sea-surface shadow-lift">
+        <div className="flex items-center justify-between border-b border-dashed border-sea-line bg-sea-raised px-5 py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
             Work order — recovery setup
           </span>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
             No. 0001
           </span>
         </div>
 
-        <div className="grid divide-y divide-sand-line md:grid-cols-2 md:divide-x md:divide-y-0">
+        <div className="grid divide-y divide-sea-line md:grid-cols-2 md:divide-x md:divide-y-0">
           <div className="p-7">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
               One-time setup
             </div>
-            <div className="mt-3 font-serif text-[3.2rem] leading-none text-sand-ink">$2,500</div>
-            <p className="mt-3 text-sm leading-relaxed text-sand-muted">
+            <div className="mt-3 font-serif text-[3.2rem] leading-none text-sea-ink">$2,500</div>
+            <p className="mt-3 text-sm leading-relaxed text-sea-muted">
               Paid in full before any work starts. Covers the build, the configuration around
               your shop, and testing it with you until it&apos;s right.
             </p>
           </div>
 
           <div className="p-7">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
               Then, monthly
             </div>
-            <div className="mt-3 font-serif text-[3.2rem] leading-none text-clay">$750</div>
-            <p className="mt-3 text-sm leading-relaxed text-sand-muted">
+            <div className="mt-3 font-serif text-[3.2rem] leading-none text-trust">$750</div>
+            <p className="mt-3 text-sm leading-relaxed text-sea-muted">
               Starts the day your system goes live — not the day you sign. Running, monitoring,
               and the weekly recap. Cancel any time.
             </p>
           </div>
         </div>
 
-        <div className="border-t border-sand-line bg-sand-raised px-5 py-4">
-          <p className="text-[13px] leading-relaxed text-sand-muted">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-sea-line bg-sea-raised px-5 py-4">
+          <p className="max-w-xl text-[13px] leading-relaxed text-sea-muted">
             No revenue share. No per-call fee. No setup on net-30 — we don&apos;t start until the
             setup fee clears, and you don&apos;t pay a monthly until it&apos;s running.
           </p>
+          <Link
+            href="/demo"
+            className="btn-cta rounded-lg bg-cta px-5 py-3 text-[14px] font-semibold text-ocean-deep hover:bg-cta-hover"
+          >
+            Watch the demo first
+          </Link>
         </div>
       </div>
     </Section>
@@ -490,13 +561,11 @@ const FAQS = [
 function Faq() {
   return (
     <Section eyebrow="Questions" title="The ones we actually get" lede="">
-      <div className="grid gap-px overflow-hidden rounded-ticket border border-sand-line shadow-ticket bg-sand-line md:grid-cols-2">
+      <div className="grid gap-px overflow-hidden rounded-ticket border border-sea-line bg-sea-line shadow-ticket md:grid-cols-2">
         {FAQS.map((f) => (
-          <div key={f.q} className="bg-sand-surface p-6">
-            <h3 className="font-serif text-[1.15rem] leading-snug text-sand-ink">
-              {f.q}
-            </h3>
-            <p className="mt-2.5 text-sm leading-relaxed text-sand-muted">{f.a}</p>
+          <div key={f.q} className="bg-sea-surface p-6">
+            <h3 className="font-serif text-[1.15rem] leading-snug text-sea-ink">{f.q}</h3>
+            <p className="mt-2.5 text-sm leading-relaxed text-sea-muted">{f.a}</p>
           </div>
         ))}
       </div>
@@ -510,8 +579,8 @@ function WhoItsFor() {
   return (
     <Section eyebrow="Fit" title="Who this is built for" lede="">
       <div className="grid gap-5 md:grid-cols-2">
-        <div className="rounded-lg border border-clay/30 bg-clay/[0.04] p-6 sm:p-7">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-clay">
+        <div className="rounded-ticket border border-trust/30 bg-trust-soft/50 p-6 sm:p-7">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-trust">
             A fit
           </div>
           <ul className="mt-4 space-y-3">
@@ -521,15 +590,15 @@ function WhoItsFor() {
               "Your phone rings after hours and nobody's on it",
               "You send written estimates and some go quiet",
             ].map((t) => (
-              <li key={t} className="flex gap-3 text-sm text-sand-ink/90">
-                <span className="text-clay">✓</span>
+              <li key={t} className="flex gap-3 text-sm text-sea-ink/90">
+                <Tick className="mt-[3px] shrink-0 text-stamp-booked" />
                 {t}
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-ticket border border-sand-line bg-sand-surface shadow-ticket p-6 sm:p-7">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+        <div className="rounded-ticket border border-sea-line bg-sea-surface p-6 shadow-ticket sm:p-7">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
             Not a fit
           </div>
           <ul className="mt-4 space-y-3">
@@ -539,7 +608,7 @@ function WhoItsFor() {
               "Anyone outside eastern MA, for now",
               "Looking for new leads rather than keeping existing ones",
             ].map((t) => (
-              <li key={t} className="flex gap-3 text-sm text-sand-muted">
+              <li key={t} className="flex gap-3 text-sm text-sea-muted">
                 <span className="text-stamp-missed">✕</span>
                 {t}
               </li>
@@ -555,26 +624,26 @@ function WhoItsFor() {
 
 function FinalCta() {
   return (
-    <section className="border-t border-sand-line">
-      <div className="mx-auto max-w-3xl px-5 py-20 text-center md:py-24">
-        <h2 className="font-serif text-4xl leading-[1.05] tracking-[-0.01em] text-sand-ink sm:text-5xl">
+    <section className="night-band relative overflow-hidden text-white">
+      <div className="relative mx-auto max-w-3xl px-5 py-20 text-center md:py-24">
+        <h2 className="font-serif text-4xl leading-[1.05] tracking-[-0.01em] text-white sm:text-5xl">
           Watch it once.
           <br />
-          <span className="text-clay">Then decide.</span>
+          <span className="italic text-ocean-muted">Then decide.</span>
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-[1.05rem] leading-relaxed text-sand-muted">
+        <p className="mx-auto mt-5 max-w-md text-[1.05rem] leading-relaxed text-white/75">
           Five minutes to see exactly what gets recovered, then a fifteen-minute call to find out
           whether your shop is a fit. Nothing to sign either way.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/demo"
-            className="rounded-lg bg-clay px-7 py-4 text-[15px] font-semibold text-sand-surface transition-colors hover:bg-clay-hover"
+            className="btn-cta rounded-lg bg-cta px-7 py-4 text-[15px] font-semibold text-ocean-deep hover:bg-cta-hover"
           >
             Watch the 5-min demo
           </Link>
         </div>
-        <p className="mt-5 text-[13px] text-sand-muted/70">
+        <p className="mt-5 text-[13px] text-white/55">
           No self-serve signup — reply to the email that sent you here
         </p>
       </div>
@@ -586,28 +655,28 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="border-t border-sand-line bg-sand-surface">
+    <footer className="bg-ocean-deep text-white">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-8">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-ocean-muted">
             {BUSINESS_NAME}
           </div>
-          <p className="mt-1.5 max-w-md text-xs leading-relaxed text-sand-muted/70">
+          <p className="mt-1.5 max-w-md text-xs leading-relaxed text-white/50">
             Missed-call and dead-estimate recovery for HVAC shops in Greater Boston and eastern
             Massachusetts.
           </p>
         </div>
-        <div className="flex gap-5 text-[13px] font-medium text-sand-muted">
-          <Link href="/demo" className="transition-colors hover:text-sand-ink">
+        <div className="flex gap-5 text-[13px] font-medium text-white/60">
+          <Link href="/demo" className="transition-colors hover:text-white">
             Demo
           </Link>
-          <Link href="/privacy" className="transition-colors hover:text-sand-ink">
+          <Link href="/privacy" className="transition-colors hover:text-white">
             Privacy
           </Link>
-          <Link href="/terms" className="transition-colors hover:text-sand-ink">
+          <Link href="/terms" className="transition-colors hover:text-white">
             Terms
           </Link>
-          <Link href="/login" className="transition-colors hover:text-sand-ink">
+          <Link href="/login" className="transition-colors hover:text-white">
             Admin
           </Link>
         </div>
@@ -617,6 +686,25 @@ function Footer() {
 }
 
 /* ------------------------------------------------------------- shared --- */
+
+function Tick({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      aria-hidden
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 8.5l3.2 3L13 4.5" />
+    </svg>
+  );
+}
 
 function Section({
   id,
@@ -632,17 +720,17 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="border-b border-sand-line">
+    <section id={id} className="border-b border-sea-line">
       <div className="mx-auto max-w-6xl px-5 py-16 md:py-20">
         <div className="mb-9 max-w-2xl">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-clay">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-trust">
             {eyebrow}
           </div>
-          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] tracking-[-0.005em] text-sand-ink sm:text-4xl">
+          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] tracking-[-0.005em] text-sea-ink sm:text-4xl">
             {title}
           </h2>
           {lede ? (
-            <p className="mt-4 text-[1.02rem] leading-relaxed text-sand-muted">{lede}</p>
+            <p className="mt-4 text-[1.02rem] leading-relaxed text-sea-muted">{lede}</p>
           ) : null}
         </div>
         {children}

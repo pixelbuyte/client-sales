@@ -19,26 +19,40 @@ const config: Config = {
         "warning-50": "#FEF8EC",
         sidebar: "#F5EDE0",
 
-        // Marketing surface — warm, textured, paper-like. Kept separate from
-        // the app tokens above so the tracker/pay pages are untouched.
-        sand: {
-          bg: "#F3EAD9",
-          surface: "#FFFDF8",
-          raised: "#FAF4E8",
-          line: "#E6DDCC",
-          ink: "#1B1712",
-          muted: "#6E675C",
+        // Marketing surface — ocean palette. See design/COLOR-RESEARCH.md for
+        // the reasoning: blue earns trust, green marks money coming back, and
+        // one orange is reserved for the CTA. Kept separate from the app
+        // tokens above so the tracker/pay pages are untouched.
+        ocean: {
+          DEFAULT: "#0B2A3F",
+          deep: "#071E2E",
+          mid: "#123A55",
+          line: "rgba(255,255,255,0.12)",
+          muted: "#9DB4C4",
         },
-        clay: {
-          DEFAULT: "#B4472C",
-          hover: "#98371F",
-          soft: "#F6E5DE",
+        sea: {
+          bg: "#EAF1F5",
+          surface: "#FFFFFF",
+          raised: "#F2F7FA",
+          line: "#D3DFE8",
+          ink: "#0E1F2D",
+          muted: "#4F6472",
+        },
+        trust: {
+          DEFAULT: "#1E5F8C",
+          hover: "#174B70",
+          soft: "#E1EDF6",
+        },
+        cta: {
+          DEFAULT: "#F08A24",
+          hover: "#D9771A",
+          soft: "#FDEBD7",
         },
         stamp: {
-          booked: "#4F7A45",
-          "booked-bg": "#EDF2E0",
-          missed: "#B22B2B",
-          "missed-bg": "#FBE9E6",
+          booked: "#1F8A5B",
+          "booked-bg": "#E4F4EC",
+          missed: "#C0392B",
+          "missed-bg": "#FBE7E4",
         },
       },
       fontFamily: {

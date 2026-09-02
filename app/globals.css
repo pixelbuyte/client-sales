@@ -35,22 +35,24 @@
 }
 
 /* ==========================================================================
-   Marketing surface — warm, textured, paper-like.
+   Marketing surface — ocean palette. Deep navy for the night-time story
+   bands, sea-paper for the daytime sections. See design/COLOR-RESEARCH.md.
    Scoped to .marketing-root so the tracker and pay pages are untouched.
    ========================================================================== */
 
 body:has(.marketing-root) {
-  background-color: #f1e6d2;
+  background-color: #eaf1f5;
 }
 
-/* Atmosphere: warm gradient pools so the ground reads as lit paper, never
-   flat. Fixed attachment keeps them steady while content scrolls past. */
+/* Atmosphere: cool gradient pools so the ground reads as lit paper by a
+   window, never flat. Fixed attachment keeps them steady while content
+   scrolls past. */
 .marketing-root {
   background:
-    radial-gradient(900px circle at 10% -8%, rgba(226, 138, 92, 0.30), transparent 55%),
-    radial-gradient(760px circle at 96% 4%, rgba(150, 175, 190, 0.26), transparent 60%),
-    radial-gradient(820px circle at 85% 96%, rgba(224, 176, 108, 0.30), transparent 55%),
-    linear-gradient(180deg, #f6eddd 0%, #efe3ce 100%);
+    radial-gradient(900px circle at 8% 12%, rgba(30, 95, 140, 0.16), transparent 55%),
+    radial-gradient(760px circle at 96% 30%, rgba(31, 138, 91, 0.10), transparent 60%),
+    radial-gradient(820px circle at 85% 96%, rgba(240, 138, 36, 0.12), transparent 55%),
+    linear-gradient(180deg, #eef4f8 0%, #e6eef3 100%);
   background-attachment: fixed;
 }
 
@@ -61,9 +63,9 @@ body:has(.marketing-root) {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.4;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: 180px 180px;
 }
 
@@ -74,15 +76,78 @@ body:has(.marketing-root) {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(27, 23, 18, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(14, 31, 45, 0.06) 1px, transparent 1px);
   background-size: 26px 26px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.12) 55%, transparent);
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.12) 55%, transparent);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1) 55%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1) 55%, transparent);
 }
 
 .marketing-root > * {
   position: relative;
   z-index: 1;
+}
+
+/* Night band — the hero and final CTA. A slow drift of deep blue light so
+   the dark surface breathes without moving anything the reader is reading. */
+.night-band {
+  background:
+    radial-gradient(1100px circle at 15% 0%, rgba(30, 95, 140, 0.55), transparent 60%),
+    radial-gradient(800px circle at 90% 110%, rgba(240, 138, 36, 0.16), transparent 55%),
+    linear-gradient(180deg, #0f3650 0%, #0b2a3f 55%, #071e2e 100%);
+}
+
+.night-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 80%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 80%);
+}
+
+/* The one orange object on the page. A soft glow makes it read as lit. */
+.btn-cta {
+  box-shadow:
+    0 1px 2px rgba(7, 30, 46, 0.2),
+    0 8px 24px rgba(240, 138, 36, 0.28);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms ease,
+    background-color 150ms ease;
+}
+
+.btn-cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 4px rgba(7, 30, 46, 0.2),
+    0 12px 32px rgba(240, 138, 36, 0.38);
+}
+
+.btn-cta:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Slow pulse on the "live" dot in the hero ticket switch. */
+@keyframes pp-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(31, 138, 91, 0.45);
+  }
+  60% {
+    box-shadow: 0 0 0 7px rgba(31, 138, 91, 0);
+  }
+}
+
+.live-dot {
+  animation: pp-pulse 2.2s ease-out infinite;
+}
+
+/* Running recovered-dollars tally in the proof strip. */
+.tally-in {
+  opacity: 0;
+  animation: pp-fade-up 0.6s 0.2s ease-out forwards;
 }
 
 /* A job ticket lifting off the desk when it gets booked. */

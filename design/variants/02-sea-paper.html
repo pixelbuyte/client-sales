@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sea Paper</title>
+<link rel="stylesheet" href="../fonts/newsreader.css"><link rel="stylesheet" href="../fonts/publicsans.css"><link rel="stylesheet" href="../fonts/jetbrains.css">
+<style>
+  :root{
+    --bg:#EAF1F5; --surface:#FFFFFF; --raised:#F2F7FA; --line:#CFDCE6; --ink:#0E1F2D; --muted:#4F6472;
+    --trust:#1E5F8C; --trust-soft:#DCEAF4; --ocean:#0B2A3F; --cta:#F08A24; --booked:#1F8A5B; --missed:#C0392B;
+    --serif:"Newsreader",Georgia,serif; --sans:"Public Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(14,31,45,.07) 1px,transparent 1px);background-size:26px 26px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .brand b{display:grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--ocean);color:#fff;font-family:var(--serif)}
+  .links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--muted);font-weight:500}
+  .btn{display:inline-block;background:var(--cta);color:#071E2E;font-weight:700;border-radius:8px;padding:12px 22px;text-decoration:none;box-shadow:0 8px 22px rgba(240,138,36,.28)}
+  .btn.sm{padding:9px 16px;font-size:14px}
+  .hero{padding:80px 0 72px;border-bottom:1px solid var(--line)}
+  .hero .wrap{display:grid;grid-template-columns:5fr 6fr;gap:64px;align-items:end}
+  .kicker{font-family:var(--mono);font-size:12px;color:var(--trust);letter-spacing:.06em}
+  h1{font-family:var(--serif);font-weight:400;font-size:72px;line-height:.98;letter-spacing:-.015em;margin:18px 0 0;text-wrap:balance}
+  h1 em{font-style:italic;color:var(--trust)}
+  .lede{max-width:42ch;color:var(--muted);font-size:18px;margin-top:26px;font-family:var(--serif);line-height:1.45}
+  .cta-row{display:flex;gap:16px;align-items:center;margin-top:34px;font-size:13px;color:var(--muted)}
+  .fine{margin-top:16px;font-size:13px;color:var(--muted)}
+  .ledger{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(14,31,45,.05),0 14px 40px rgba(14,31,45,.10);overflow:hidden}
+  .ledger .head{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px dashed var(--line);background:var(--raised);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .ledger .art{padding:18px 18px 0}
+  .ledger svg{width:100%;height:auto;display:block}
+  .row{display:grid;grid-template-columns:86px 1fr auto;gap:14px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+  .row .t{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .row .who{font-family:var(--serif);font-size:19px}
+  .row .who span{color:var(--muted)}
+  .row p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+  .tag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:6px;border:2px solid;transform:rotate(-6deg)}
+  .tag.miss{color:var(--missed);border-color:var(--missed);background:#FBE7E4}
+  .tag.ok{color:var(--booked);border-color:var(--booked);background:#E4F4EC}
+  .trustbar{display:flex;gap:40px;padding:22px 0;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+  .trustbar b{color:var(--ink);font-weight:600}
+  section.body{padding:88px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--trust);font-weight:700}
+  h2{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.05;margin:12px 0 0;max-width:20ch;text-wrap:balance;letter-spacing:-.01em}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:40px}
+  .grid3 > div{background:var(--surface);padding:28px}
+  .grid3 h3{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 8px}
+  .grid3 p{margin:0;color:var(--muted);font-size:15px}
+  .grid3 .n{width:30px;height:30px;border-radius:999px;background:var(--trust-soft);color:var(--trust);display:grid;place-items:center;font-family:var(--mono);font-size:12px;margin-bottom:16px}
+  .hours{display:flex;gap:3px;margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+  .hours i{flex:1;height:80px;border-radius:3px;background:var(--ocean)}
+  .hours i.day{background:var(--trust)}
+  .legend{display:flex;gap:28px;margin-top:14px;font-size:13px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:-1px;background:var(--trust)}
+  .legend span.n::before{background:var(--ocean)}
+  .pricing{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;align-items:start}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:32px}
+  .card .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .amt{font-family:var(--serif);font-size:68px;line-height:1;margin-top:10px;letter-spacing:-.02em}
+  .amt.mo{color:var(--trust)}
+  .card p{color:var(--muted);font-size:15px;margin:14px 0 0}
+  footer{padding:28px 0;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap"><nav>
+  <div class="brand"><b>H</b> Northeast Call Recovery</div>
+  <div class="links"><span>How it works</span><span>Pricing</span><a class="btn sm" href="#">See the demo</a></div>
+</nav></div>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <div class="kicker">TUESDAY · 9:14 PM · QUINCY, MA</div>
+    <h1>The call you missed is <em>already booked</em> with the next shop.</h1>
+    <p class="lede">Unless a text went back in four seconds. We catch the after-hours calls and the estimates that went quiet, and put them back on your schedule.</p>
+    <div class="cta-row"><a class="btn" href="#">Watch the 5-min demo</a> then a 15-minute call</div>
+    <p class="fine">No signup. No app for your techs. The monthly doesn't start until you're live.</p>
+  </div>
+  <div class="ledger">
+    <div class="head"><span>Tonight's calls · after close</span><span>Recovery: on</span></div>
+    <div class="art">
+      <!-- Cartoon: a desk phone with the handset off the hook, a text bubble answering it -->
+      <svg viewBox="0 0 520 150" role="img" aria-label="An office phone at night and a text message reply">
+        <rect width="520" height="150" rx="10" fill="#F2F7FA"/>
+        <rect x="24" y="96" width="472" height="3" fill="#CFDCE6"/>
+        <!-- desk phone -->
+        <rect x="56" y="54" width="120" height="44" rx="8" fill="#1E5F8C"/>
+        <rect x="70" y="62" width="44" height="26" rx="3" fill="#0B2A3F"/>
+        <g fill="#DCEAF4"><rect x="124" y="63" width="9" height="7" rx="1"/><rect x="137" y="63" width="9" height="7" rx="1"/><rect x="150" y="63" width="9" height="7" rx="1"/><rect x="124" y="74" width="9" height="7" rx="1"/><rect x="137" y="74" width="9" height="7" rx="1"/><rect x="150" y="74" width="9" height="7" rx="1"/></g>
+        <path d="M52 44 q64 -30 128 0" stroke="#0B2A3F" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <text x="72" y="79" font-family="JetBrains Mono, monospace" font-size="9" fill="#F08A24">RINGING</text>
+        <!-- arrow -->
+        <path d="M200 76 h60" stroke="#4F6472" stroke-width="2" stroke-dasharray="4 4"/><path d="M256 70 l8 6 -8 6" stroke="#4F6472" stroke-width="2" fill="none"/>
+        <text x="230" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#4F6472">4 sec</text>
+        <!-- phone with text bubble -->
+        <rect x="290" y="28" width="52" height="86" rx="9" fill="#0B2A3F"/><rect x="295" y="36" width="42" height="70" rx="5" fill="#fff"/>
+        <rect x="300" y="44" width="30" height="16" rx="6" fill="#DCEAF4"/><rect x="304" y="66" width="30" height="16" rx="6" fill="#1E5F8C"/>
+        <!-- big bubble -->
+        <path d="M356 40 h140 a10 10 0 0 1 10 10 v40 a10 10 0 0 1 -10 10 h-120 l-14 12 v-12 h-6 a10 10 0 0 1 -10 -10 v-40 a10 10 0 0 1 10 -10z" fill="#fff" stroke="#CFDCE6"/>
+        <text x="368" y="60" font-family="Public Sans, sans-serif" font-size="11" fill="#0E1F2D">Sorry we missed you — is this</text>
+        <text x="368" y="75" font-family="Public Sans, sans-serif" font-size="11" fill="#0E1F2D">an emergency, or can we book</text>
+        <text x="368" y="90" font-family="Public Sans, sans-serif" font-size="11" fill="#0E1F2D">you for tomorrow morning?</text>
+      </svg>
+    </div>
+    <div class="row"><span class="t">9:14 pm</span><div><div class="who">Dana R. <span>· Quincy</span></div><p>“Furnace won't fire, house is down to 54.”</p></div><span class="tag ok">Booked 7:30a</span></div>
+    <div class="row"><span class="t">11:41 pm</span><div><div class="who">Marcus T. <span>· Weymouth</span></div><p>“No heat and we have a newborn here.”</p></div><span class="tag ok">Escalated</span></div>
+    <div class="row"><span class="t">6:30 am</span><div><div class="who">Joanne P. <span>· Milton</span></div><p>“Had a question on the replacement quote.”</p></div><span class="tag ok">Replied</span></div>
+  </div>
+</div></header>
+
+<div class="wrap"><div class="trustbar">
+  <span><b>4 seconds</b> to a text back</span><span><b>15 hours</b> a weekday your line rings out</span><span><b>$0</b> monthly until you're live</span><span><b>Cancel</b> any time</span>
+</div></div>
+
+<section class="body"><div class="wrap">
+  <div class="eyebrow">The gap</div>
+  <h2>Your office is open nine hours. Your phone isn't.</h2>
+  <div class="hours">
+    <i></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i><i class="day"></i>
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <div class="legend"><span>Someone at the desk, 9 hours</span><span class="n">Rings out, 15 hours plus every weekend</span></div>
+</div></section>
+
+<section class="body"><div class="wrap">
+  <div class="eyebrow">How it works</div>
+  <h2>Four steps. You do almost none of them.</h2>
+  <div class="grid3">
+    <div><div class="n">01</div><h3>One short call</h3><p>Your main line, who answers it, what happens after 5 pm, and how estimates go out today.</p></div>
+    <div><div class="n">02</div><h3>We configure it around your shop</h3><p>Your hours, your service area, how you want urgent jobs handled. You install nothing.</p></div>
+    <div><div class="n">03</div><h3>We test it with you, then it runs</h3><p>You hear exactly what a customer hears before a single call reaches it. Then the weekly recap shows what came back.</p></div>
+  </div>
+</div></section>
+
+<section class="body" style="border-bottom:0"><div class="wrap">
+  <div class="eyebrow">Pricing</div>
+  <h2>Two numbers. No surprises.</h2>
+  <div class="pricing">
+    <div class="card"><div class="lbl">One-time setup</div><div class="amt">$2,500</div><p>Paid in full before any work starts. Covers the build, the configuration around your shop, and testing it with you until it's right.</p></div>
+    <div class="card"><div class="lbl">Then, monthly</div><div class="amt mo">$750</div><p>Starts the day your system goes live, not the day you sign. Priced below one recovered job for most shops your size. Cancel any time.</p><p style="margin-top:22px"><a class="btn sm" href="#">Watch the demo first</a></p></div>
+  </div>
+</div></section>
+
+<div class="wrap"><footer><span>NORTHEAST CALL RECOVERY · Greater Boston and eastern Massachusetts</span><span>Demo · Privacy · Terms</span></footer></div>
+</body>
+</html>

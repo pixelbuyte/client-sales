@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The 9:14 pm call — 30s, 16:9</title>
+<link rel="stylesheet" href="../fonts/fraunces.css">
+<link rel="stylesheet" href="../fonts/dmsans.css">
+<link rel="stylesheet" href="../fonts/jetbrains.css">
+<style>
+  /* 1920×1080, 30 seconds. Every motion is a CSS animation with an absolute
+     delay, so the renderer can seek the whole page to any time. */
+  :root{
+    --ocean:#0B2A3F; --deep:#071E2E; --mid:#123A55; --muted:#9DB4C4; --white:#F4F8FB;
+    --cta:#F08A24; --booked:#2FB57A; --booked-ink:#1F8A5B; --missed:#E2604F; --missed-ink:#C0392B;
+    --serif:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,sans-serif; --mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--deep);color:var(--white);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  .stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:
+    radial-gradient(1400px circle at 15% -10%, rgba(30,95,140,.55), transparent 60%),
+    radial-gradient(900px circle at 92% 110%, rgba(240,138,36,.16), transparent 55%),
+    linear-gradient(180deg,var(--mid) 0%,var(--ocean) 55%,var(--deep) 100%)}
+  .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.07) 1.5px,transparent 1.5px);background-size:40px 40px;
+    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 80%);mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 80%)}
+  .scene{position:absolute;inset:0;opacity:0;visibility:hidden;animation:scene var(--d) var(--t) both linear}
+  @keyframes scene{0%{opacity:0;visibility:hidden}7%{opacity:1;visibility:visible}93%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+  .up{opacity:0;animation:up .8s var(--t) both cubic-bezier(.22,1,.36,1)}
+  @keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+  .pop{opacity:0;animation:pop .5s var(--t) both cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+  .brand{position:absolute;left:80px;top:60px;display:flex;align-items:center;gap:14px;font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .brand b{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:var(--white);color:var(--ocean);font-family:var(--serif);font-size:22px}
+  .region{position:absolute;right:80px;top:66px;font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:var(--serif);font-weight:400;font-size:112px;line-height:1;letter-spacing:-.015em;margin:0}
+  h1 em{font-style:italic;color:var(--muted)}
+  .sub{font-size:34px;line-height:1.4;color:rgba(244,248,251,.75);max-width:22ch}
+  .mono{font-family:var(--mono)}
+  /* scene 1 */
+  .s1 .left{position:absolute;left:120px;top:250px}
+  .clock{position:absolute;right:160px;top:170px;width:420px;text-align:center}
+  .clock .face{width:300px;height:300px;margin:0 auto;border-radius:50%;background:var(--ocean);border:8px solid #3b6f8f;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+  .clock .h,.clock .m{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:4px;background:#fff}
+  .clock .h{width:10px;height:80px;margin-left:-5px;transform:rotate(275deg)}
+  .clock .m{width:8px;height:120px;margin-left:-4px;background:var(--cta);transform:rotate(84deg)}
+  .clock .pin{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#fff}
+  .clock .t{font-family:var(--mono);font-size:44px;margin-top:26px}
+  .phone{position:absolute;right:250px;top:600px;width:210px;height:300px}
+  .phone .body{position:absolute;inset:0;border-radius:32px;background:#0E1F2D;border:6px solid #3b6f8f;animation:shake .5s .6s 9 ease-in-out}
+  .phone .screen{position:absolute;inset:22px;border-radius:18px;background:#FFD48A;display:grid;place-items:center;font-family:var(--mono);font-size:16px;color:#0B2A3F;text-align:center;line-height:1.4}
+  @keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+  .ring{position:absolute;left:-40px;top:70px;width:290px;height:160px}
+  .ring i{position:absolute;inset:0;border-radius:50%;border:4px solid var(--cta);opacity:0;animation:ring 1.2s 0.6s 4 ease-out}
+  .ring i:nth-child(2){animation-delay:1s}.ring i:nth-child(3){animation-delay:1.4s}
+  @keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+  .ticket{position:relative;background:#fff;color:#0E1F2D;border-radius:18px;padding:26px 220px 26px 34px;box-shadow:0 24px 60px rgba(0,0,0,.45);border-left:8px solid var(--missed);width:760px}
+  .ticket.booked{border-left-color:var(--booked)}
+  .ticket small{font-family:var(--mono);font-size:20px;color:#4F6472}
+  .ticket .who{font-family:var(--serif);font-size:38px;margin-top:4px}
+  .ticket .who span{color:#4F6472}
+  .ticket p{margin:6px 0 0;font-size:26px;color:#4F6472}
+  .stamp{position:absolute;right:28px;top:50%;margin-top:-40px;border:4px solid;border-radius:10px;padding:10px 18px;text-align:center;font-weight:800;font-size:22px;letter-spacing:.12em;text-transform:uppercase;line-height:1;transform:rotate(-8deg)}
+  .stamp b{display:block;font-weight:500;font-size:16px;letter-spacing:0;text-transform:none;margin-top:6px;opacity:.85}
+  .stamp.miss{color:var(--missed-ink);border-color:var(--missed-ink);background:#FBE7E4}
+  .stamp.ok{color:var(--booked-ink);border-color:var(--booked-ink);background:#E4F4EC}
+  .s1 .ticket{position:absolute;left:120px;top:720px}
+  /* scene 2: search results */
+  .s2 .copy{position:absolute;left:120px;top:300px}
+  .serp{position:absolute;right:140px;top:250px;width:760px;background:#fff;color:#0E1F2D;border-radius:18px;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .serp .q{border:2px solid #CFDCE6;border-radius:999px;padding:14px 22px;font-size:22px;color:#4F6472}
+  .serp .r{padding:22px 10px;border-bottom:1px solid #E6EEF3}
+  .serp .r b{display:block;font-size:26px;color:#1E5F8C;font-weight:500}
+  .serp .r span{font-size:18px;color:#4F6472}
+  .serp .r.you{opacity:.45}
+  .serp .r.them{background:#FDEBD7;border-radius:12px;margin:8px -10px;padding:22px 20px;border:0}
+  .serp .call{display:inline-block;margin-top:10px;background:#1F8A5B;color:#fff;border-radius:8px;padding:8px 14px;font-size:18px;font-weight:600}
+  /* scene 3: toggle + text */
+  .s3 .copy{position:absolute;left:120px;top:280px}
+  .switch{position:absolute;right:200px;top:300px;display:flex;align-items:center;gap:26px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:999px;padding:22px 34px 22px 26px;font-size:30px}
+  .switch .tr{width:110px;height:58px;border-radius:999px;background:rgba(255,255,255,.25);position:relative;animation:track .4s 12.9s both}
+  .switch .kn{position:absolute;left:7px;top:7px;width:44px;height:44px;border-radius:50%;background:#fff;animation:knob .4s 12.9s both cubic-bezier(.22,1,.36,1)}
+  @keyframes track{to{background:var(--booked)}}
+  @keyframes knob{to{transform:translateX(52px)}}
+  .bubble{position:absolute;right:200px;top:470px;width:640px;background:#fff;color:#0E1F2D;border-radius:26px;border-bottom-left-radius:6px;padding:28px 32px;font-size:28px;line-height:1.4;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .bubble small{display:block;font-family:var(--mono);font-size:18px;color:#4F6472;margin-bottom:10px}
+  .reply{position:absolute;right:200px;top:760px;background:#1E5F8C;color:#fff;border-radius:26px;border-bottom-right-radius:6px;padding:22px 30px;font-size:28px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  /* scene 4: tickets */
+  .s4 .copy{position:absolute;left:120px;top:250px;width:640px}
+  .s4 .stack{position:absolute;right:120px;top:190px;display:grid;gap:22px}
+  /* scene 5: pricing */
+  .s5 .copy{position:absolute;left:120px;top:210px}
+  .price{position:absolute;right:120px;top:260px;width:820px;border:2px solid rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.05);overflow:hidden}
+  .price .head{display:flex;justify-content:space-between;padding:18px 32px;border-bottom:2px dashed rgba(255,255,255,.16);font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .price .grid{display:grid;grid-template-columns:1fr 1fr}
+  .price .grid>div{padding:36px 32px}
+  .price .grid>div+div{border-left:2px solid rgba(255,255,255,.16)}
+  .price .lbl{font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .price .amt{font-family:var(--serif);font-size:110px;line-height:1;margin-top:14px}
+  .price .amt.mo{color:var(--muted)}
+  .price p{font-size:22px;color:rgba(244,248,251,.75);margin:14px 0 0;line-height:1.4}
+  /* scene 6: cta */
+  .s6 .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+  .btn{display:inline-block;background:var(--cta);color:var(--deep);font-weight:600;font-size:38px;border-radius:16px;padding:30px 56px;box-shadow:0 20px 70px rgba(240,138,36,.4)}
+  .glow{animation:glow 1.6s 27.6s 2 ease-in-out}
+  @keyframes glow{50%{box-shadow:0 20px 110px rgba(240,138,36,.75);transform:translateY(-4px)}}
+  .progress{position:absolute;left:0;bottom:0;height:6px;background:var(--cta);width:0;animation:bar 30s 0s linear both}
+  @keyframes bar{to{width:100%}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="brand"><b>H</b> Northeast Call Recovery</div>
+  <div class="region">Greater Boston · eastern MA</div>
+
+  <!-- 0–7.6s : the call -->
+  <section class="scene s1" style="--t:0s;--d:7.6s">
+    <div class="left">
+      <h1 class="up" style="--t:.6s">Your phone rang<br>at 9:14 pm.</h1>
+      <p class="sub up" style="--t:1.6s;margin-top:30px">A no-heat call in Quincy. The house is at 54°.</p>
+      <h1 class="up" style="--t:3.6s;margin-top:30px;font-size:96px"><em>Nobody picked up.</em></h1>
+    </div>
+    <div class="clock up" style="--t:.2s"><div class="face"><div class="h"></div><div class="m"></div><div class="pin"></div></div><div class="t">9:14 PM</div></div>
+    <div class="phone up" style="--t:.4s"><div class="ring"><i></i><i></i><i></i></div><div class="body"><div class="screen">INCOMING<br>(617) 555-0142<br>Quincy, MA</div></div></div>
+    <article class="ticket up" style="--t:4.8s"><small>#2211 · 9:14 pm</small><div class="who">Dana R. <span>· Quincy</span></div><p>“Furnace won't fire, house is down to 54.”</p><div class="stamp miss pop" style="--t:5.6s">Missed<b>no answer</b></div></article>
+  </section>
+
+  <!-- 7.6–12s : where it went -->
+  <section class="scene s2" style="--t:7.6s;--d:4.6s">
+    <div class="copy">
+      <h1 class="up" style="--t:8s;font-size:96px">It went to the<br>next shop in<br>the results.</h1>
+      <p class="sub up" style="--t:9s;margin-top:30px">Nine minutes later. No voicemail. You never knew it rang.</p>
+    </div>
+    <div class="serp up" style="--t:8.3s">
+      <div class="q">emergency furnace repair near me</div>
+      <div class="r you"><b>Your HVAC Co. — Quincy</b><span>Called 9:14 pm · rang out</span></div>
+      <div class="r them up" style="--t:9.4s"><b>The Other Shop — Braintree</b><span>Called 9:23 pm · answered</span><br><span class="call up" style="--t:10.2s">Booked for 7:30 am</span></div>
+      <div class="r"><b>Someone Else Heating &amp; Air</b><span>Open 24 hours</span></div>
+    </div>
+  </section>
+
+  <!-- 12–17s : recovery on -->
+  <section class="scene s3" style="--t:12s;--d:5s">
+    <div class="copy">
+      <h1 class="up" style="--t:12.3s;font-size:96px">Turn recovery on.</h1>
+      <p class="sub up" style="--t:13.6s;margin-top:30px">A missed call gets a text back in <b class="mono" style="color:var(--cta)">4 seconds</b>. Not the next morning.</p>
+    </div>
+    <div class="switch up" style="--t:12.3s"><div class="tr"><div class="kn"></div></div><span>Covered</span></div>
+    <div class="bubble up" style="--t:14s"><small>9:14:04 pm · from your number</small>Sorry we missed your call — this is the after-hours line. Is this an emergency, or can we get you on the schedule for tomorrow?</div>
+    <div class="reply up" style="--t:15.4s">No heat at all, house is 54. Tomorrow works.</div>
+  </section>
+
+  <!-- 17–22.6s : booked -->
+  <section class="scene s4" style="--t:17s;--d:5.6s">
+    <div class="copy">
+      <h1 class="up" style="--t:17.3s;font-size:96px">Same night.<br><em>Different ending.</em></h1>
+      <p class="sub up" style="--t:20.6s;margin-top:30px">Three jobs that would have gone to the next shop, back on your book by 7 am.</p>
+    </div>
+    <div class="stack">
+      <article class="ticket booked up" style="--t:17.5s"><small>#2211 · 9:14 pm</small><div class="who">Dana R. <span>· Quincy</span></div><p>“Furnace won't fire, house is down to 54.”</p><div class="stamp ok pop" style="--t:18.2s">Booked<b>7:30 am</b></div></article>
+      <article class="ticket booked up" style="--t:18.5s"><small>#2212 · 11:41 pm</small><div class="who">Marcus T. <span>· Weymouth</span></div><p>“No heat and we have a newborn here.”</p><div class="stamp ok pop" style="--t:19.2s">Booked<b>escalated tonight</b></div></article>
+      <article class="ticket booked up" style="--t:19.5s"><small>#2213 · 6:30 am</small><div class="who">Joanne P. <span>· Milton</span></div><p>“Had a question on the replacement quote.”</p><div class="stamp ok pop" style="--t:20.2s">Replied<b>closed</b></div></article>
+    </div>
+  </section>
+
+  <!-- 22.6–27s : pricing -->
+  <section class="scene s5" style="--t:22.6s;--d:4.4s">
+    <div class="copy">
+      <h1 class="up" style="--t:22.9s;font-size:92px">Two numbers.<br><em>No surprises.</em></h1>
+      <p class="sub up" style="--t:24.4s;margin-top:30px">The monthly starts the day you're live, not the day you sign. Priced below one recovered job.</p>
+    </div>
+    <div class="price up" style="--t:23.1s">
+      <div class="head"><span>Work order — recovery setup</span><span>No. 0001</span></div>
+      <div class="grid">
+        <div><div class="lbl">One-time setup</div><div class="amt">$2,500</div><p>Paid once, before any work starts.</p></div>
+        <div><div class="lbl">Then, monthly</div><div class="amt mo">$750</div><p>Starts at go-live. Cancel any time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27–30s : cta -->
+  <section class="scene s6" style="--t:27s;--d:3.4s">
+    <div class="c"><div>
+      <h1 class="up" style="--t:27.2s;font-size:104px">Watch it once.<br><em>Then decide.</em></h1>
+      <p class="up" style="--t:27.8s;margin:40px 0 0"><span class="btn glow">Watch the 5-minute demo</span></p>
+      <p class="sub up" style="--t:28.3s;margin:34px auto 0;font-size:24px;max-width:none">Five minutes to see what gets recovered. Then a fifteen-minute call. Nothing to sign either way.</p>
+    </div></div>
+  </section>
+
+  <div class="progress"></div>
+</div>
+</body>
+</html>

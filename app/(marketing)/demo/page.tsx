@@ -97,15 +97,15 @@ export default function DemoPage() {
 
 function DemoNav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-sand-line/80 bg-sand-bg/70 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-sea-line/80 bg-sea-bg/70 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5">
         <Link
           href="/"
-          className="text-[13px] font-medium text-sand-muted transition-colors hover:text-sand-ink"
+          className="text-[13px] font-medium text-sea-muted transition-colors hover:text-sea-ink"
         >
           ← {BUSINESS_NAME}
         </Link>
-        <span className="text-[13px] font-medium text-clay">
+        <span className="text-[13px] font-medium text-trust">
           5-minute demo
         </span>
       </div>
@@ -115,19 +115,19 @@ function DemoNav() {
 
 function DemoHero() {
   return (
-    <section className="relative overflow-hidden border-b border-sand-line">
+    <section className="relative overflow-hidden border-b border-sea-line">
       <div className="relative mx-auto max-w-5xl px-5 py-16 md:py-20">
-        <h1 className="hero-1 max-w-2xl font-serif text-[2.5rem] leading-[1.04] tracking-[-0.01em] text-sand-ink sm:text-5xl">
+        <h1 className="hero-1 max-w-2xl font-serif text-[2.5rem] leading-[1.04] tracking-[-0.01em] text-sea-ink sm:text-5xl">
           Three nights at a shop
           <br />
-          <span className="text-clay">that isn&apos;t running this.</span>
+          <span className="text-trust">that isn&apos;t running this.</span>
         </h1>
-        <p className="hero-2 mt-6 max-w-xl text-[1.05rem] leading-relaxed text-sand-muted">
+        <p className="hero-2 mt-6 max-w-xl text-[1.05rem] leading-relaxed text-sea-muted">
           Then the same three nights with it on. Same calls, same customers, same shop — every
           message below is what actually goes out. Read it and decide whether it sounds like your
           business.
         </p>
-        <div className="hero-3 mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[13px] font-medium text-sand-muted">
+        <div className="hero-3 mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[13px] font-medium text-sea-muted">
           <span>01 · Missed night call</span>
           <span>02 · Dead estimate</span>
           <span>03 · Saturday overflow</span>
@@ -159,29 +159,29 @@ function Scenario({
   thread?: { from: "shop" | "them"; text: string }[];
 }) {
   return (
-    <section className="border-b border-sand-line">
+    <section className="border-b border-sea-line">
       <div className="mx-auto max-w-5xl px-5 py-16 md:py-20">
         <div className="mb-8 max-w-2xl">
           <div className="flex items-baseline gap-3">
-            <span className="font-code text-[11px] font-bold tracking-[0.2em] text-clay">{n}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+            <span className="font-code text-[11px] font-bold tracking-[0.2em] text-trust">{n}</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
               {when}
             </span>
           </div>
-          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] tracking-[-0.005em] text-sand-ink sm:text-4xl">
+          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] tracking-[-0.005em] text-sea-ink sm:text-4xl">
             {tag}
           </h2>
-          <p className="mt-4 text-[1.02rem] leading-relaxed text-sand-muted">{setup}</p>
+          <p className="mt-4 text-[1.02rem] leading-relaxed text-sea-muted">{setup}</p>
         </div>
 
-        <div className="grid gap-px overflow-hidden rounded-ticket border border-sand-line shadow-ticket bg-sand-line lg:grid-cols-2">
+        <div className="grid gap-px overflow-hidden rounded-ticket border border-sea-line shadow-ticket bg-sea-line lg:grid-cols-2">
           <Timeline title="Without this" beats={without} tone="lost" />
           <Timeline title="With recovery running" beats={withIt} tone="ok" />
         </div>
 
         {thread ? (
           <div className="mt-6">
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+            <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
               The actual thread
             </div>
             <MessageThread messages={thread} />
@@ -194,10 +194,10 @@ function Scenario({
 
 function Timeline({ title, beats, tone }: { title: string; beats: Beat[]; tone: "lost" | "ok" }) {
   return (
-    <div className={`bg-sand-surface p-6 sm:p-7 ${tone === "ok" ? "bg-clay/[0.04]" : ""}`}>
+    <div className={`bg-sea-surface p-6 sm:p-7 ${tone === "ok" ? "bg-trust/[0.04]" : ""}`}>
       <div
         className={`text-[11px] font-semibold uppercase tracking-[0.13em] ${
-          tone === "ok" ? "text-clay" : "text-sand-muted"
+          tone === "ok" ? "text-trust" : "text-sea-muted"
         }`}
       >
         {title}
@@ -205,11 +205,11 @@ function Timeline({ title, beats, tone }: { title: string; beats: Beat[]; tone: 
       <ol className="mt-5 space-y-4">
         {beats.map((b, i) => (
           <li key={i} className="grid grid-cols-[5.5rem_1fr] gap-3">
-            <span className="font-code text-[11px] tabular-nums text-sand-muted/80">{b.t}</span>
+            <span className="font-code text-[11px] tabular-nums text-sea-muted/80">{b.t}</span>
             <div>
               <div
                 className={`text-[11px] font-semibold uppercase tracking-[0.13em] ${
-                  b.who === "Recovery" ? "text-clay" : "text-sand-muted/70"
+                  b.who === "Recovery" ? "text-trust" : "text-sea-muted/70"
                 }`}
               >
                 {b.who}
@@ -219,8 +219,8 @@ function Timeline({ title, beats, tone }: { title: string; beats: Beat[]; tone: 
                   b.tone === "bad"
                     ? "text-stamp-missed/90"
                     : b.tone === "good"
-                      ? "text-sand-ink"
-                      : "text-sand-muted"
+                      ? "text-sea-ink"
+                      : "text-sea-muted"
                 }`}
               >
                 {b.text}
@@ -235,15 +235,15 @@ function Timeline({ title, beats, tone }: { title: string; beats: Beat[]; tone: 
 
 function MessageThread({ messages }: { messages: { from: "shop" | "them"; text: string }[] }) {
   return (
-    <div className="rounded-ticket border border-sand-line bg-sand-surface shadow-ticket p-5 sm:p-6">
+    <div className="rounded-ticket border border-sea-line bg-sea-surface shadow-ticket p-5 sm:p-6">
       <div className="space-y-3">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.from === "shop" ? "justify-start" : "justify-end"}`}>
             <div
               className={`max-w-[85%] rounded-lg px-4 py-2.5 text-sm leading-relaxed sm:max-w-[70%] ${
                 m.from === "shop"
-                  ? "rounded-tl-sm bg-sand-raised text-sand-ink"
-                  : "rounded-tr-sm bg-clay/12 text-sand-ink"
+                  ? "rounded-tl-sm bg-sea-raised text-sea-ink"
+                  : "rounded-tr-sm bg-trust/12 text-sea-ink"
               }`}
             >
               {m.text}
@@ -251,7 +251,7 @@ function MessageThread({ messages }: { messages: { from: "shop" | "them"; text: 
           </div>
         ))}
       </div>
-      <p className="mt-4 border-t border-sand-line pt-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted/70">
+      <p className="mt-4 border-t border-sea-line pt-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted/70">
         Wording is set with you during configuration — it goes out in your shop&apos;s voice, not ours
       </p>
     </div>
@@ -269,34 +269,34 @@ const RECAP = [
 
 function WeeklyRecap() {
   return (
-    <section className="border-b border-sand-line">
+    <section className="border-b border-sea-line">
       <div className="mx-auto max-w-5xl px-5 py-16 md:py-20">
         <div className="mb-8 max-w-2xl">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-clay">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-trust">
             What you see
           </div>
-          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sand-ink sm:text-4xl">
+          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sea-ink sm:text-4xl">
             One email a week. That&apos;s the whole reporting.
           </h2>
-          <p className="mt-4 text-[1.02rem] leading-relaxed text-sand-muted">
+          <p className="mt-4 text-[1.02rem] leading-relaxed text-sea-muted">
             No dashboard to check, no login to remember. If it stops earning its keep, you&apos;ll
             see it here first.
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-ticket border border-sand-line bg-sand-surface shadow-ticket">
-          <div className="border-b border-sand-line bg-sand-raised px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+        <div className="overflow-hidden rounded-ticket border border-sea-line bg-sea-surface shadow-ticket">
+          <div className="border-b border-sea-line bg-sea-raised px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
             Weekly recap — example week
           </div>
-          <div className="grid gap-px bg-sand-line sm:grid-cols-4">
+          <div className="grid gap-px bg-sea-line sm:grid-cols-4">
             {RECAP.map((r) => (
-              <div key={r.label} className="bg-sand-surface p-5">
-                <div className="font-serif text-[2.4rem] leading-none text-clay">{r.value}</div>
-                <div className="mt-1.5 text-xs leading-relaxed text-sand-muted">{r.label}</div>
+              <div key={r.label} className="bg-sea-surface p-5">
+                <div className="font-serif text-[2.4rem] leading-none text-trust">{r.value}</div>
+                <div className="mt-1.5 text-xs leading-relaxed text-sea-muted">{r.label}</div>
               </div>
             ))}
           </div>
-          <div className="border-t border-sand-line px-5 py-4 text-[13px] text-sand-muted">
+          <div className="border-t border-sea-line px-5 py-4 text-[13px] text-sea-muted">
             Figures shown are an illustrative example, not a promise — your real numbers land in
             the same format.
           </div>
@@ -317,30 +317,30 @@ const NEEDS = [
 
 function WhatWeNeed() {
   return (
-    <section className="border-b border-sand-line">
+    <section className="border-b border-sea-line">
       <div className="mx-auto max-w-5xl px-5 py-16 md:py-20">
         <div className="mb-8 max-w-2xl">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-clay">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-trust">
             Your side of it
           </div>
-          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sand-ink sm:text-4xl">
+          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sea-ink sm:text-4xl">
             Four answers. That&apos;s the setup.
           </h2>
-          <p className="mt-4 text-[1.02rem] leading-relaxed text-sand-muted">
+          <p className="mt-4 text-[1.02rem] leading-relaxed text-sea-muted">
             Everything else is on us. There is no install, no migration, and nothing your techs
             have to learn.
           </p>
         </div>
-        <div className="grid gap-px overflow-hidden rounded-ticket border border-sand-line shadow-ticket bg-sand-line sm:grid-cols-2">
+        <div className="grid gap-px overflow-hidden rounded-ticket border border-sea-line shadow-ticket bg-sea-line sm:grid-cols-2">
           {NEEDS.map((n, i) => (
-            <div key={n.t} className="bg-sand-surface p-6">
-              <div className="text-[13px] font-semibold text-clay">
+            <div key={n.t} className="bg-sea-surface p-6">
+              <div className="text-[13px] font-semibold text-trust">
                 {String(i + 1).padStart(2, "0")}
               </div>
-              <h3 className="mt-2.5 font-serif text-[1.15rem] leading-snug text-sand-ink">
+              <h3 className="mt-2.5 font-serif text-[1.15rem] leading-snug text-sea-ink">
                 {n.t}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-sand-muted">{n.d}</p>
+              <p className="mt-2 text-sm leading-relaxed text-sea-muted">{n.d}</p>
             </div>
           ))}
         </div>
@@ -361,29 +361,29 @@ const AFTER = [
 
 function AfterYes() {
   return (
-    <section className="border-b border-sand-line">
+    <section className="border-b border-sea-line">
       <div className="mx-auto max-w-5xl px-5 py-16 md:py-20">
         <div className="mb-8 max-w-2xl">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-clay">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-trust">
             The order things happen
           </div>
-          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sand-ink sm:text-4xl">
+          <h2 className="mt-3 font-serif text-[1.9rem] leading-[1.1] text-sea-ink sm:text-4xl">
             What happens after you say yes
           </h2>
         </div>
-        <ol className="relative border-l border-sand-line pl-6">
+        <ol className="relative border-l border-sea-line pl-6">
           {AFTER.map((a, i) => (
             <li key={a.t} className="relative pb-7 last:pb-0">
-              <span className="absolute -left-[27px] top-1 grid h-3.5 w-3.5 place-items-center rounded-full border border-clay bg-sand-raised">
-                <span className="h-1.5 w-1.5 rounded-full bg-clay" />
+              <span className="absolute -left-[27px] top-1 grid h-3.5 w-3.5 place-items-center rounded-full border border-trust bg-sea-raised">
+                <span className="h-1.5 w-1.5 rounded-full bg-trust" />
               </span>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sand-muted">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
                 Step {String(i + 1).padStart(2, "0")}
               </div>
-              <h3 className="mt-1 font-serif text-[1.2rem] leading-snug text-sand-ink">
+              <h3 className="mt-1 font-serif text-[1.2rem] leading-snug text-sea-ink">
                 {a.t}
               </h3>
-              <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-sand-muted">{a.d}</p>
+              <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-sea-muted">{a.d}</p>
             </li>
           ))}
         </ol>
@@ -398,20 +398,20 @@ function DemoCta() {
   return (
     <section className="">
       <div className="mx-auto max-w-3xl px-5 py-20 text-center md:py-24">
-        <h2 className="font-serif text-4xl leading-[1.05] text-sand-ink sm:text-4xl">
+        <h2 className="font-serif text-4xl leading-[1.05] text-sea-ink sm:text-4xl">
           Sound like your shop?
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-[1.05rem] leading-relaxed text-sand-muted">
+        <p className="mx-auto mt-5 max-w-md text-[1.05rem] leading-relaxed text-sea-muted">
           Next step is a fifteen-minute call — enough to tell whether this is worth doing for your
           business, or whether it plainly isn&apos;t.
         </p>
-        <p className="mt-8 text-[13px] font-medium text-sand-muted">
+        <p className="mt-8 text-[13px] font-medium text-sea-muted">
           Reply to the email that sent you here
         </p>
-        <div className="mt-10 border-t border-sand-line pt-6">
+        <div className="mt-10 border-t border-sea-line pt-6">
           <Link
             href="/"
-            className="text-[13px] font-medium text-sand-muted transition-colors hover:text-sand-ink"
+            className="text-[13px] font-medium text-sea-muted transition-colors hover:text-sea-ink"
           >
             ← Back to the overview
           </Link>
