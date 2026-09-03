@@ -118,6 +118,45 @@ export async function POST(req: Request) {
 type Admin = ReturnType<typeof createAdminClient>;
 type StripeClient = ReturnType<typeof stripe>;
 
+// Looks up a shop by the payer's email (case-insensitive), creating one if
+// none exists yet. Used only for checkout sessions with no shop_id
+// metadata — i.e. payments through a Stripe Payment Link shared outside
+// the admin tracker, not the normal /pay/[token] flow. Returns null if
+// Stripe didn't collect an email (shouldn't happen for a hosted Checkout
+// session, but the webhook must not crash if it does).
+async function findOrCreateShopByEmail(
+  admin: Admin,
+  session: Stripe.Checkout.Session,
+  customerId: string | null,
+): Promise<string | null> {
+  const rawEmail = session.customer_details?.email;
+  if (!rawEmail) return null;
+  const email = rawEmail.trim().toLowerCase();
+
+  const { data: matches, error: findErr } = await admin
+    .from("shops")
+    .select("id")
+    .eq("contact_email", email)
+    .limit(1);
+  if (findErr) throw new Error(`shop lookup failed: ${findErr.message}`);
+  if (matches && matches.length > 0) return matches[0].id;
+
+  const name = session.customer_details?.name?.trim() || null;
+  const { data: created, error: createErr } = await admin
+    .from("shops")
+    .insert({
+      business_name: name ?? `Unknown — ${email}`,
+      contact_name: name,
+      contact_email: email,
+      source: "stripe_payment_link",
+      stripe_customer_id: customerId,
+    })
+    .select("id")
+    .single();
+  if (createErr) throw new Error(`shop auto-create failed: ${createErr.message}`);
+  return created.id;
+}
+
 async function advanceStage(admin: Admin, shopId: string, nextStage: string) {
   const { data: shop, error } = await admin
     .from("shops")
@@ -135,15 +174,22 @@ async function advanceStage(admin: Admin, shopId: string, nextStage: string) {
 async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Event): Promise<string | null> {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const shopId =
+    const metadataShopId =
       session.client_reference_id ??
       (typeof session.metadata?.shop_id === "string" ? session.metadata.shop_id : null);
-    if (!shopId) return null;
 
     const customerId =
       typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
 
     if (session.mode === "payment") {
+      // A session created through our own /pay/[token] flow always carries
+      // client_reference_id. One with no shop id came from a Stripe Payment
+      // Link shared outside the app (e.g. handed to a bot to distribute) —
+      // find or create the shop by the payer's email so it still lands in
+      // the tracker instead of disappearing.
+      const shopId = metadataShopId ?? (await findOrCreateShopByEmail(admin, session, customerId));
+      if (!shopId) return null;
+
       const paymentIntentId =
         typeof session.payment_intent === "string"
           ? session.payment_intent
@@ -159,10 +205,16 @@ async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Eve
         .eq("id", shopId);
       if (error) throw new Error(`shops update failed: ${error.message}`);
       await advanceStage(admin, shopId, "paid");
-    } else if (session.mode === "subscription") {
+      return shopId;
+    }
+
+    if (session.mode === "subscription") {
       // Fallback path only — the primary go-live path creates the
-      // subscription directly via the API (see app/app/shops/[id]/actions.ts)
-      // and doesn't go through Checkout.
+      // subscription directly via the API (see app/app/shops/actions.ts)
+      // and doesn't go through Checkout. This path always carries
+      // client_reference_id (see app/pay/[token]/subscribe/actions.ts), so
+      // there's no shop to look up by email here.
+      if (!metadataShopId) return null;
       const subscriptionId =
         typeof session.subscription === "string"
           ? session.subscription
@@ -174,11 +226,13 @@ async function handleEvent(admin: Admin, client: StripeClient, event: Stripe.Eve
           stripe_subscription_id: subscriptionId,
           subscription_started_at: new Date().toISOString(),
         })
-        .eq("id", shopId);
+        .eq("id", metadataShopId);
       if (error) throw new Error(`shops update failed: ${error.message}`);
-      await advanceStage(admin, shopId, "live");
+      await advanceStage(admin, metadataShopId, "live");
+      return metadataShopId;
     }
-    return shopId;
+
+    return null;
   }
 
   if (
