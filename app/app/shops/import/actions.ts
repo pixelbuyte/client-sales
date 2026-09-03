@@ -52,6 +52,14 @@ function s(v: string | undefined): string | null {
   return t.length === 0 ? null : t;
 }
 
+// Emails are stored lowercased so the Stripe webhook's find-or-create-by-email
+// lookup (for payments made through a Payment Link outside the app) matches
+// shops imported here regardless of the CSV's original casing.
+function sEmail(v: string | undefined): string | null {
+  const t = s(v);
+  return t ? t.toLowerCase() : null;
+}
+
 export async function importShops(formData: FormData): Promise<ImportResult> {
   await requireAdmin();
   const admin = createAdminClient();
@@ -108,7 +116,7 @@ export async function importShops(formData: FormData): Promise<ImportResult> {
     inserts.push({
       business_name: businessName,
       contact_name: s(r.contact_name),
-      contact_email: s(r.contact_email),
+      contact_email: sEmail(r.contact_email),
       contact_phone: s(r.contact_phone),
       service_area: s(r.service_area),
       source: s(r.source) ?? "csv_import",

@@ -12,8 +12,13 @@ Vercel.
 - **$750/month**, starting only once the shop's system is live — never at signing.
 - Sold as "recovered jobs / missed night calls / dead estimates," never as "AI," a chatbot, a
   CRM, or a platform.
-- **A pay link is never sent automatically.** It's generated in the tracker, copied by hand, and
-  sent only after a prospect has said yes on a call.
+- **A pay link is never sent automatically from the tracker.** The `/pay/[token]` link is
+  generated in the tracker, copied by hand, and sent only after a prospect has said yes on a
+  call.
+- **Exception:** a generic Stripe Payment Link (`buy.stripe.com/...`, created directly in the
+  Stripe Dashboard, not by this app) can be handed to a bot or other automated channel to send
+  at its own judgment. Since that link carries no `shop_id`, the webhook attributes it to a shop
+  by matching the payer's email instead — see "Stripe Payment Link attribution" below.
 
 ## Funnel
 
@@ -54,6 +59,25 @@ pnpm dev
 
 "Admin only" means the signed-in Supabase user's email is in `ADMIN_EMAILS`; anyone else is
 redirected to `/login`.
+
+## Stripe Payment Link attribution
+
+A shop created through the normal tracker flow always pays via its own `/pay/[token]` page, whose
+Checkout Session carries `client_reference_id`/`metadata.shop_id`, so the webhook always knows
+which shop to update.
+
+A payment through a generic Stripe Payment Link (e.g. one handed to a bot to distribute) has no
+`shop_id` — it never touched this app. When `checkout.session.completed` fires for a payment-mode
+session with no `shop_id`, the webhook (`app/api/webhooks/stripe/route.ts`,
+`findOrCreateShopByEmail`) looks up a `shops` row by the payer's email (`customer_details.email`,
+lowercased). If one matches, that shop is updated and advanced to `paid` as usual. If none
+matches, a new shop is created (`source: "stripe_payment_link"`, `business_name` falling back to
+`"Unknown — <email>"` if Stripe didn't collect a name) so the payment still lands in the tracker
+instead of disappearing.
+
+Because the lookup is case-insensitive, every insert path (`createShop`, CSV `importShops`, and
+the webhook itself) lowercases `contact_email` before writing it, so a shop added manually or by
+CSV still gets matched correctly if its contact later pays through the generic link.
 
 ## Environment variables
 

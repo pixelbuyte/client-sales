@@ -14,6 +14,14 @@ function s(v: FormDataEntryValue | null): string | null {
   return t.length === 0 ? null : t;
 }
 
+// Emails are stored lowercased so the Stripe webhook's find-or-create-by-email
+// lookup (for payments made through a Payment Link outside the app) matches
+// shops added here regardless of how the admin capitalized it.
+function sEmail(v: FormDataEntryValue | null): string | null {
+  const t = s(v);
+  return t ? t.toLowerCase() : null;
+}
+
 export async function createShop(formData: FormData) {
   await requireAdmin();
   const admin = createAdminClient();
@@ -26,7 +34,7 @@ export async function createShop(formData: FormData) {
     .insert({
       business_name: businessName,
       contact_name: s(formData.get("contact_name")),
-      contact_email: s(formData.get("contact_email")),
+      contact_email: sEmail(formData.get("contact_email")),
       contact_phone: s(formData.get("contact_phone")),
       service_area: s(formData.get("service_area")),
       notes: s(formData.get("notes")),

@@ -62,6 +62,10 @@ create table if not exists shops (
 
 create index if not exists shops_stage_idx on shops (stage);
 create index if not exists shops_stripe_customer_idx on shops (stripe_customer_id) where stripe_customer_id is not null;
+-- Looked up by the Stripe webhook to attribute a Payment Link payment (one
+-- with no shop_id metadata) to an existing shop by email. Emails are stored
+-- lowercased by every insert path, so a plain btree index is enough.
+create index if not exists shops_contact_email_idx on shops (contact_email) where contact_email is not null;
 
 drop trigger if exists shops_touch on shops;
 create trigger shops_touch
