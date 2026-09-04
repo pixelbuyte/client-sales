@@ -165,6 +165,10 @@ function TwoLeaks() {
             This isn&apos;t lead generation. We&apos;re not buying you new customers — we&apos;re
             keeping the ones who already called you, and the ones you already quoted.
           </p>
+          <div className="c03-head-note is-alt" data-drift aria-hidden="true">
+            <span className="c03-head-note-tape" />
+            they already called you once. this is about the second time.
+          </div>
         </div>
 
         <div className="c03-leaks" data-reveal-group>
@@ -320,6 +324,10 @@ function YourNumbers() {
             Don&apos;t take our figures — use yours. Slide in what a job is actually worth at your
             shop and how much rings out, and the math answers itself. Be stingy with it.
           </p>
+          <div className="c03-head-note" data-drift aria-hidden="true">
+            <span className="c03-head-note-tape" />
+            one in four won back is a fair place to start. we&apos;d rather you underguess.
+          </div>
         </div>
         <Calculator />
       </div>
@@ -495,6 +503,10 @@ function WhoItsFor() {
             We&apos;d rather tell you on the call that your shop isn&apos;t a fit than take the
             setup fee and disappoint you.
           </p>
+          <div className="c03-head-note is-alt" data-drift aria-hidden="true">
+            <span className="c03-head-note-tape" />
+            5 to 30 trucks. eastern MA. phone rings after 5. that&apos;s the whole fit.
+          </div>
         </div>
         <div className="c03-fit" data-reveal-group>
           <div className="c03-fit-card is-yes">
@@ -552,7 +564,7 @@ function FinalCta() {
   return (
     <section className="c03-board c03-board-deep c03-final" aria-labelledby="c03-final-title">
       <div className="c03-wrap">
-        <div data-reveal>
+        <div data-reveal data-clock-sweep>
           <WallClock className="c03-final-clock" />
         </div>
         <h2 id="c03-final-title" data-split>

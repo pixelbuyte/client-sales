@@ -16,6 +16,8 @@ import { gsap, ScrollTrigger, SplitText, MOTION_OK, DESKTOP } from "./gsapSetup"
  *   data-road / data-van  the van drives across the road as you scroll
  *   data-peel           the pricing card peels in with a 3D rotateX
  *   data-x              marker X marks scale in with a bounce
+ *   data-clock-sweep    a wall clock whose hands sweep from 5:00 to 9:14
+ *   data-drift          slow parallax on decorative notes (desktop only)
  */
 export function PageMotion() {
   useLayoutEffect(() => {
@@ -97,6 +99,27 @@ export function PageMotion() {
             duration: 1.1,
             ease: "power3.out",
             scrollTrigger: { trigger: card, start: "top 85%", once: true },
+          });
+        });
+
+        // Wall clocks outside the hero: hands sweep from 5:00 to 9:14 on entry.
+        gsap.utils.toArray<HTMLElement>("[data-clock-sweep]").forEach((wrap) => {
+          const hour = wrap.querySelector<SVGGElement>('[data-hand="hour"]');
+          const minute = wrap.querySelector<SVGGElement>('[data-hand="minute"]');
+          if (!hour || !minute) return;
+          const hands = { h: 150, m: 0 };
+          const paint = () => {
+            hour.style.transform = `rotate(${hands.h}deg)`;
+            minute.style.transform = `rotate(${hands.m}deg)`;
+          };
+          paint();
+          gsap.to(hands, {
+            h: 277,
+            m: 84,
+            duration: 1.6,
+            ease: "power2.inOut",
+            onUpdate: paint,
+            scrollTrigger: { trigger: wrap, start: "top 85%", once: true },
           });
         });
 
