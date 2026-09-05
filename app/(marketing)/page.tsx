@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { BUSINESS_NAME } from "@/lib/business";
 import { JobTickets } from "@/components/marketing/JobTickets";
+import { LogoMark, Wordmark } from "@/components/marketing/Logo";
 
 export const metadata = {
   title: `${BUSINESS_NAME} — missed-call & dead-estimate recovery for HVAC shops`,
@@ -40,13 +41,9 @@ function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-sea-line/80 bg-sea-bg/75 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-ocean font-serif text-[14px] text-white">
-            H
-          </span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.13em] text-sea-muted">
-            {BUSINESS_NAME}
-          </span>
+        <Link href="/" className="flex items-center gap-2">
+          <LogoMark className="h-7 w-7" />
+          <Wordmark className="text-sea-ink" />
         </Link>
         <nav className="flex items-center gap-5">
           <Link
@@ -658,8 +655,9 @@ function Footer() {
     <footer className="bg-ocean-deep text-white">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-8">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-ocean-muted">
-            {BUSINESS_NAME}
+          <div className="flex items-center gap-2">
+            <LogoMark className="h-6 w-6" tone="light" />
+            <Wordmark className="text-white" />
           </div>
           <p className="mt-1.5 max-w-md text-xs leading-relaxed text-white/50">
             Missed-call and dead-estimate recovery for HVAC shops in Greater Boston and eastern
