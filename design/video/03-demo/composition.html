@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Afterline — the 5-minute demo</title>
+<link rel="stylesheet" href="../../fonts/fraunces.css"><link rel="stylesheet" href="../../fonts/dmsans.css"><link rel="stylesheet" href="../../fonts/jetbrains.css">
+<style>
+:root{--ocean:#0B2A3F;--deep:#071E2E;--mid:#123A55;--muted:#9DB4C4;--white:#F4F8FB;--cta:#F08A24;--booked:#2FB57A;--booked-ink:#1F8A5B;--missed:#E2604F;--missed-ink:#C0392B;--trust:#5FA8DC;
+--serif:"Fraunces",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace}
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--deep);color:var(--white);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:radial-gradient(1400px circle at 15% -10%,rgba(30,95,140,.55),transparent 60%),radial-gradient(900px circle at 92% 110%,rgba(240,138,36,.14),transparent 55%),linear-gradient(180deg,var(--mid) 0%,var(--ocean) 55%,var(--deep) 100%)}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.07) 1.5px,transparent 1.5px);background-size:40px 40px;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 80%);mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 80%)}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;animation:scene var(--d) var(--t) both linear}
+@keyframes scene{0%{opacity:0;visibility:hidden}4%{opacity:1;visibility:visible}96%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+.up{opacity:0;animation:up .7s var(--t) both cubic-bezier(.22,1,.36,1)}@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.pop{opacity:0;animation:pop .45s var(--t) both cubic-bezier(.34,1.56,.64,1)}@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.mono{font-family:var(--mono)}
+.brand{position:absolute;left:80px;top:54px;display:flex;align-items:center;gap:14px;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;z-index:3}
+.brand b{display:grid;place-items:center;width:38px;height:38px;border-radius:8px;background:var(--white);color:var(--ocean);font-family:var(--serif);font-size:21px}
+.chapterbar{position:absolute;right:80px;top:60px;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;z-index:3}
+.progress{position:absolute;left:0;bottom:0;height:6px;background:var(--cta);width:0;animation:bar 273.1s 0s linear both;z-index:3}@keyframes bar{to{width:100%}}
+.eyebrow{font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--cta);font-weight:600;min-height:20px}
+h1{font-family:var(--serif);font-weight:400;font-size:104px;line-height:1;letter-spacing:-.015em;margin:22px 0 0;text-wrap:balance}
+h1 em{font-style:italic;color:var(--muted)}
+h2{font-family:var(--serif);font-weight:400;font-size:64px;line-height:1.04;letter-spacing:-.01em;margin:18px 0 0;text-wrap:balance}
+.lede{font-size:32px;line-height:1.45;color:rgba(244,248,251,.78);margin:26px auto 0;max-width:30ch}
+.center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 200px}
+.center>div{max-width:1400px}
+.copy{position:absolute;left:100px;top:200px;width:640px}
+.cap{font-size:27px;line-height:1.4;color:rgba(244,248,251,.78);margin:22px 0 0;padding-left:22px;border-left:3px solid rgba(240,138,36,.6)}
+/* clock */
+.stagebox{position:absolute;left:880px;top:160px;width:960px;height:760px}
+.clock{position:absolute;left:60px;top:40px;width:360px;text-align:center}
+.clock .face{width:300px;height:300px;margin:0 auto;border-radius:50%;background:var(--ocean);border:8px solid #3b6f8f;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.clock .h,.clock .m{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:4px;background:#fff}
+.clock .h{width:10px;height:80px;margin-left:-5px;transform:rotate(275deg)}.clock .m{width:8px;height:120px;margin-left:-4px;background:var(--cta);transform:rotate(84deg)}
+.clock .pin{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#fff}
+.clock .t{font-family:var(--mono);font-size:40px;margin-top:22px}
+.phone{position:absolute;left:520px;top:80px;width:210px;height:300px}
+.phone .body{position:absolute;inset:0;border-radius:32px;background:#0E1F2D;border:6px solid #3b6f8f;animation:shake .5s var(--t) 9 ease-in-out}
+.phone .screen{position:absolute;inset:22px;border-radius:18px;background:#FFD48A;display:grid;place-items:center;font-family:var(--mono);font-size:16px;color:#0B2A3F;text-align:center;line-height:1.4}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+.ring{position:absolute;left:-40px;top:70px;width:290px;height:160px}
+.ring i{position:absolute;inset:0;border-radius:50%;border:4px solid var(--cta);opacity:0;animation:ring 1.2s var(--t) 4 ease-out}
+.ring i:nth-child(2){animation-delay:calc(var(--t) + .4s)}.ring i:nth-child(3){animation-delay:calc(var(--t) + .8s)}
+@keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+.house{position:absolute;left:60px;top:420px;width:560px}.house svg{width:100%;height:auto}
+/* thread */
+.phoneframe{position:absolute;left:880px;top:150px;width:900px;background:#fff;color:#0E1F2D;border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+.phead{display:flex;justify-content:space-between;padding:22px 32px;background:#F2F7FA;border-bottom:1px solid #D3DFE8;font-size:20px;font-weight:600;color:#4F6472}
+.msgs{padding:28px 32px 32px;display:grid;gap:16px;min-height:520px;align-content:start}
+.msg{max-width:78%;padding:18px 24px;border-radius:24px;font-size:25px;line-height:1.38}
+.msg small{display:block;font-family:var(--mono);font-size:14px;opacity:.6;margin-bottom:6px}
+.msg.shop{background:#1E5F8C;color:#fff;border-bottom-left-radius:6px;justify-self:start}
+.msg.them{background:#E8EEF3;color:#0E1F2D;border-bottom-right-radius:6px;justify-self:end}
+.msg.sys{background:transparent;color:#4F6472;font-family:var(--mono);font-size:16px;justify-self:center;padding:4px 0}
+/* beats */
+.beatcols{position:absolute;left:780px;top:150px;width:1060px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.col{border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(255,255,255,.04);padding:22px 24px}
+.col.bad .colhead{color:var(--missed)}.col.good .colhead{color:var(--booked)}
+.colhead{font-size:14px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:14px}
+.beat{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;padding:15px 0;border-top:1px solid rgba(255,255,255,.1);font-size:23px;line-height:1.35}
+.beat .mono{font-size:16px;color:var(--muted);padding-top:3px}.beat .who{font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.beat .txt{grid-column:2;color:rgba(244,248,251,.9)}
+.beat.bad .txt{color:#F4B3AA}.beat.good .txt{color:#BFF0D7}
+/* list, grid */
+.steps{position:absolute;left:820px;top:170px;width:1000px;margin:0;padding:0;list-style:none;display:grid;gap:18px}
+.steps li{display:grid;grid-template-columns:70px 1fr;gap:20px;align-items:start;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.04);padding:22px 26px}
+.steps .n{font-family:var(--mono);font-size:18px;color:var(--cta);padding-top:6px}
+.steps b{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;display:block}
+.steps p{margin:8px 0 0;font-size:21px;line-height:1.4;color:rgba(244,248,251,.75)}
+.grid{position:absolute;left:820px;top:170px;width:1000px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cell{display:flex;gap:16px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.04);padding:22px 24px}
+.cell .x{color:var(--missed);font-size:22px;padding-top:6px}
+.cell b{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;display:block}
+.cell p{margin:8px 0 0;font-size:19px;line-height:1.4;color:rgba(244,248,251,.72)}
+/* tickets */
+.stack{position:absolute;right:100px;top:190px;display:grid;gap:22px}
+.ticket{position:relative;background:#fff;color:#0E1F2D;border-radius:18px;padding:26px 220px 26px 34px;box-shadow:0 24px 60px rgba(0,0,0,.45);border-left:8px solid var(--missed);width:800px}
+.ticket.booked{border-left-color:var(--booked)}.ticket small{font-size:20px;color:#4F6472}
+.ticket .who{font-family:var(--serif);font-size:38px;margin-top:4px}.ticket .who span{color:#4F6472}.ticket p{margin:6px 0 0;font-size:26px;color:#4F6472}
+.stamp{position:absolute;right:28px;top:50%;margin-top:-40px;border:4px solid;border-radius:10px;padding:10px 18px;text-align:center;font-weight:800;font-size:22px;letter-spacing:.12em;text-transform:uppercase;line-height:1;transform:rotate(-8deg)}
+.stamp b{display:block;font-weight:500;font-size:16px;letter-spacing:0;text-transform:none;margin-top:6px;opacity:.85}
+.stamp.miss{color:var(--missed-ink);border-color:var(--missed-ink);background:#FBE7E4}.stamp.ok{color:var(--booked-ink);border-color:var(--booked-ink);background:#E4F4EC}
+/* pricing */
+.price{position:absolute;left:860px;top:200px;width:960px;border:2px solid rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.05);overflow:hidden}
+.price .head{display:flex;justify-content:space-between;padding:18px 32px;border-bottom:2px dashed rgba(255,255,255,.16);font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pgrid{display:grid;grid-template-columns:1fr 1fr}.pgrid>div{padding:36px 32px}.pgrid>div+div{border-left:2px solid rgba(255,255,255,.16)}
+.price .lbl{font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.price .amt{font-family:var(--serif);font-size:120px;line-height:1;margin-top:14px}.price .amt.mo{color:var(--muted)}
+.price p{font-size:23px;color:rgba(244,248,251,.75);margin:14px 0 0;line-height:1.4}
+.pfoot{border-top:2px solid rgba(255,255,255,.16);padding:20px 32px;font-size:20px;color:var(--muted)}
+/* recap mail */
+.mail{position:absolute;left:860px;top:170px;width:960px;background:#fff;color:#0E1F2D;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+.mhead{display:flex;justify-content:space-between;padding:24px 32px;background:#F2F7FA;border-bottom:1px solid #D3DFE8;font-size:22px;color:#4F6472}
+.mhead b{color:#0E1F2D;font-family:var(--serif);font-weight:400;font-size:28px}
+.mrow{display:flex;justify-content:space-between;padding:20px 32px;border-bottom:1px solid #E6EEF3;font-size:26px}
+.mrow b{color:#1F8A5B;font-weight:600}
+.mfoot{padding:18px 32px;font-size:17px;color:#4F6472}
+</style></head><body><div class="stage">
+<div class="brand"><b>H</b> Afterline · the 5-minute demo</div>
+<section class="scene" style="--t:0.00s;--d:16.15s">
+  <div class="chapterbar">The 5-minute demo</div>
+  <div class="center">
+      <div class="eyebrow up" style="--t:0.10s">The 5-minute demo</div>
+      <h1 class="up" style="--t:0.30s">Three nights at a shop<br><em>that isn't running this.</em></h1>
+      <p class="lede up" style="--t:7.72s">Then the same three nights with it on.</p><p class="lede up" style="--t:14.55s">Same calls. Same customers. Same shop.</p>
+    </div>
+</section>
+<section class="scene" style="--t:16.15s;--d:14.57s">
+  <div class="chapterbar">01 · Missed night call</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:16.25s">01 · Missed night call</div>
+    <h2 class="up" style="--t:16.40s">Tuesday, 9:14 pm.</h2>
+    <p class="cap up" style="--t:21.07s">A no-heat call after the office has closed.</p><p class="cap up" style="--t:25.09s">Nobody is at the desk.</p><p class="cap up" style="--t:29.11s">The customer does not leave a voicemail. Almost nobody does.</p>
+  </div>
+    <div class="stagebox">
+      <div class="clock up" style="--t:16.35s"><div class="face"><div class="h"></div><div class="m"></div><div class="pin"></div></div><div class="t">9:14 PM</div></div>
+      <div class="phone up" style="--t:16.65s"><div class="ring" style="--t:16.95s"><i></i><i></i><i></i></div><div class="body" style="--t:16.95s"><div class="screen">INCOMING<br>(617) 555-0142<br>Quincy, MA</div></div></div>
+      <div class="house up" style="--t:16.45s"><svg viewBox="0 0 300 200" aria-hidden><polygon points="60,110 150,50 240,110" fill="#173B54"/><rect x="72" y="108" width="156" height="72" fill="#1E4A66"/><rect x="185" y="62" width="18" height="28" fill="#173B54"/><rect x="140" y="135" width="28" height="45" fill="#0f2b3f"/><circle cx="105" cy="138" r="40" fill="url(#g)"/><rect x="88" y="122" width="36" height="32" rx="2" fill="#FFD48A"/><defs><radialGradient id="g"><stop offset="0" stop-color="#F08A24" stop-opacity=".8"/><stop offset="1" stop-color="#F08A24" stop-opacity="0"/></radialGradient></defs><text x="150" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#9DB4C4">54°F inside</text></svg></div>
+    </div>
+</section>
+<section class="scene" style="--t:30.71s;--d:41.78s">
+  <div class="chapterbar">01 · Missed night call</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:30.81s">01 · Missed night call</div>
+    <h2 class="up" style="--t:30.96s">Without this.</h2>
+    
+  </div>
+    <div class="beatcols up" style="--t:30.91s">
+      <div class="col bad"><div class="colhead">Without this</div>
+        <div class="beat neutral up" style="--t:32.11s"><span class="mono">9:14 pm</span><span class="who">Customer</span><span class="txt">Calls the shop line. Rings out after six rings.</span></div><div class="beat neutral up" style="--t:39.87s"><span class="mono">9:14 pm</span><span class="who">Customer</span><span class="txt">Hangs up. No voicemail left.</span></div><div class="beat bad up" style="--t:47.62s"><span class="mono">9:23 pm</span><span class="who">Customer</span><span class="txt">Searches “emergency furnace repair near me.” Calls the next shop.</span></div><div class="beat bad up" style="--t:55.38s"><span class="mono">Next morning</span><span class="who">Your shop</span><span class="txt">Sees one missed call with no name and no context. Nobody calls back.</span></div>
+      </div><div class="col good"><div class="colhead">With recovery running</div>
+        <div class="beat neutral up" style="--t:32.11s"><span class="mono">9:14 pm</span><span class="who">Customer</span><span class="txt">Calls the shop line. Rings out after six rings.</span></div><div class="beat good up" style="--t:39.87s"><span class="mono">9:14 pm</span><span class="who">Recovery</span><span class="txt">Missed call detected. Text goes out four seconds later.</span></div><div class="beat neutral up" style="--t:47.62s"><span class="mono">9:15 pm</span><span class="who">Customer</span><span class="txt">Replies: “No heat at all, house is 54. Can someone come tomorrow?”</span></div><div class="beat good up" style="--t:55.38s"><span class="mono">9:15 pm</span><span class="who">Recovery</span><span class="txt">Not flagged life-safety, so it's booked rather than escalated. Offers morning windows.</span></div><div class="beat good up" style="--t:63.14s"><span class="mono">9:17 pm</span><span class="who">Customer</span><span class="txt">Takes the 7:30–9:30 am window. Confirmed.</span></div><div class="beat good up" style="--t:70.89s"><span class="mono">7:02 am</span><span class="who">Your shop</span><span class="txt">Job is on the board with the address, the symptom, and the whole thread.</span></div>
+      </div>
+    </div>
+</section>
+<section class="scene" style="--t:72.49s;--d:27.62s">
+  <div class="chapterbar">01 · Missed night call</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:72.59s">01 · Missed night call</div>
+    <h2 class="up" style="--t:72.74s">What actually goes out.</h2>
+    <p class="cap up" style="--t:85.95s">Every message here is the real wording.</p><p class="cap up" style="--t:98.51s">Written with you on the configuration call.</p>
+  </div>
+    <div class="phoneframe up" style="--t:72.69s">
+      <div class="phead"><span>After-hours line · (617) 555-0142</span><span class="mono">9:14 pm</span></div>
+      <div class="msgs"><div class="msg sys pop" style="--t:73.99s">Missed call · text sent 4 seconds later</div><div class="msg shop pop" style="--t:78.90s">Sorry we missed your call — this is the after-hours line for [your shop]. Is this an emergency, or can we get you on the schedule for tomorrow?</div><div class="msg them pop" style="--t:83.80s">No heat at all, house is 54. Can someone come tomorrow?</div><div class="msg shop pop" style="--t:88.70s">We can. First openings tomorrow are 7:30–9:30am or 11am–1pm. Which works? If it drops below 50 tonight, text back URGENT and we'll escalate.</div><div class="msg them pop" style="--t:93.61s">7:30 please</div><div class="msg shop pop" style="--t:98.51s">Booked — 7:30–9:30am, and we've got your address from the number on file. You'll get a text when the tech is on the way.</div></div>
+    </div>
+</section>
+<section class="scene" style="--t:100.11s;--d:36.06s">
+  <div class="chapterbar">02 · Dead estimate</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:100.21s">02 · Dead estimate</div>
+    <h2 class="up" style="--t:100.36s">Nine days after the quote.</h2>
+    <p class="cap up" style="--t:117.79s">You quoted a system replacement.</p><p class="cap up" style="--t:134.57s">They didn't say no. They went quiet.</p>
+  </div>
+    <div class="beatcols up" style="--t:100.31s">
+      <div class="col bad"><div class="colhead">Without this</div>
+        <div class="beat neutral up" style="--t:101.51s"><span class="mono">Day 0</span><span class="who">Your shop</span><span class="txt">Sends a written estimate for a full system replacement.</span></div><div class="beat neutral up" style="--t:109.78s"><span class="mono">Day 3</span><span class="who">Customer</span><span class="txt">Reads it. Means to reply. Doesn't.</span></div><div class="beat bad up" style="--t:118.04s"><span class="mono">Day 9</span><span class="who">Your shop</span><span class="txt">Nobody follows up. The quote is in a folder now.</span></div><div class="beat bad up" style="--t:126.31s"><span class="mono">Day 30</span><span class="who">Customer</span><span class="txt">Goes with whoever followed up. You never find out why you lost it.</span></div>
+      </div><div class="col good"><div class="colhead">With recovery running</div>
+        <div class="beat neutral up" style="--t:101.51s"><span class="mono">Day 0</span><span class="who">Your shop</span><span class="txt">Sends the same written estimate.</span></div><div class="beat good up" style="--t:109.78s"><span class="mono">Day 3</span><span class="who">Recovery</span><span class="txt">Automatic check-in: any questions on the quote?</span></div><div class="beat good up" style="--t:118.04s"><span class="mono">Day 3</span><span class="who">Customer</span><span class="txt">Replies: “Waiting to hear about financing.”</span></div><div class="beat good up" style="--t:126.31s"><span class="mono">Day 9</span><span class="who">Recovery</span><span class="txt">Second touch, now that there's a real objection on the table.</span></div><div class="beat good up" style="--t:134.57s"><span class="mono">Day 10</span><span class="who">Your shop</span><span class="txt">You answer the financing question yourself and close it — or you get a clean no and stop guessing.</span></div>
+      </div>
+    </div>
+</section>
+<section class="scene" style="--t:136.17s;--d:20.32s">
+  <div class="chapterbar">02 · Dead estimate</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:136.27s">02 · Dead estimate</div>
+    <h2 class="up" style="--t:136.42s">The follow-up, word for word.</h2>
+    <p class="cap up" style="--t:145.98s">Day 3. Then day 9.</p><p class="cap up" style="--t:154.89s">You hear a yes, a no, or an objection you can answer.</p>
+  </div>
+    <div class="phoneframe up" style="--t:136.37s">
+      <div class="phead"><span>Estimate follow-up · replacement quote</span><span class="mono">Day 3</span></div>
+      <div class="msgs"><div class="msg shop pop" style="--t:137.67s">Hi — following up on the replacement quote we sent Tuesday. Any questions on it, or anything you'd want priced differently?</div><div class="msg them pop" style="--t:143.41s">Still waiting to hear back about financing before we decide</div><div class="msg shop pop" style="--t:149.15s">Understood. Want me to have someone walk you through the payment options we work with? Takes about five minutes and might move it along.</div><div class="msg them pop" style="--t:154.89s">Yeah that would help actually</div></div>
+    </div>
+</section>
+<section class="scene" style="--t:156.49s;--d:30.52s">
+  <div class="chapterbar">03 · Saturday overflow</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:156.59s">03 · Saturday overflow</div>
+    <h2 class="up" style="--t:156.74s">Saturday, 11:40 am.</h2>
+    <p class="cap up" style="--t:171.40s">Everyone is on a job.</p><p class="cap up" style="--t:185.40s">Three calls stack up in twenty minutes.</p>
+  </div>
+    <div class="beatcols up" style="--t:156.69s">
+      <div class="col bad"><div class="colhead">Without this</div>
+        <div class="beat good up" style="--t:157.89s"><span class="mono">11:40 am</span><span class="who">Caller 1</span><span class="txt">Gets through. Booked.</span></div><div class="beat bad up" style="--t:167.06s"><span class="mono">11:47 am</span><span class="who">Caller 2</span><span class="txt">Busy signal. Hangs up.</span></div><div class="beat bad up" style="--t:176.23s"><span class="mono">11:52 am</span><span class="who">Caller 3</span><span class="txt">Rings out. Hangs up.</span></div><div class="beat bad up" style="--t:185.40s"><span class="mono">Monday</span><span class="who">Your shop</span><span class="txt">Two numbers in the missed list. No context, no names, nobody calls them.</span></div>
+      </div><div class="col good"><div class="colhead">With recovery running</div>
+        <div class="beat good up" style="--t:157.89s"><span class="mono">11:40 am</span><span class="who">Caller 1</span><span class="txt">Gets through. Booked as normal.</span></div><div class="beat good up" style="--t:167.06s"><span class="mono">11:47 am</span><span class="who">Recovery</span><span class="txt">Caller 2 texted back immediately. Books Monday 8am.</span></div><div class="beat good up" style="--t:176.23s"><span class="mono">11:52 am</span><span class="who">Recovery</span><span class="txt">Caller 3 texted back. Says it's a leak — flagged urgent.</span></div><div class="beat good up" style="--t:185.40s"><span class="mono">11:55 am</span><span class="who">Your shop</span><span class="txt">You see the urgent flag and route it. The other is already on Monday's board.</span></div>
+      </div>
+    </div>
+</section>
+<section class="scene" style="--t:187.00s;--d:11.87s">
+  <div class="chapterbar">What you see</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:187.10s">What you see</div>
+    <h2 class="up" style="--t:187.25s">One email a week.</h2>
+    <p class="cap up" style="--t:192.59s">That's the whole reporting.</p><p class="cap up" style="--t:197.28s">No dashboard to check. No login to remember.</p>
+  </div>
+    <div class="mail up" style="--t:187.30s">
+      <div class="mhead"><div><b>Weekly recap</b> · example week</div><div class="mono">to: you</div></div>
+      <div class="mrow up" style="--t:188.50s"><span>After-hours calls texted back</span><b class="mono">9</b></div><div class="mrow up" style="--t:190.70s"><span>Booked from those</span><b class="mono">4</b></div><div class="mrow up" style="--t:192.89s"><span>Estimates checked in on</span><b class="mono">6</b></div><div class="mrow up" style="--t:195.08s"><span>Replies you can act on</span><b class="mono">3</b></div><div class="mrow up" style="--t:197.28s"><span>Flagged urgent and routed</span><b class="mono">1</b></div>
+      <div class="mfoot">Illustrative example, not a promise. Your real numbers land in the same format.</div>
+    </div>
+</section>
+<section class="scene" style="--t:198.88s;--d:20.49s">
+  <div class="chapterbar">Your side of it</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:198.98s">Your side of it</div>
+    <h2 class="up" style="--t:199.13s">Four answers. That's the setup.</h2>
+    <p class="cap up" style="--t:208.77s">Everything else is on us.</p><p class="cap up" style="--t:217.77s">No install. No migration. Nothing your techs have to learn.</p>
+  </div>
+    <ol class="steps up" style="--t:199.08s">
+      <li class="up" style="--t:200.28s"><span class="n">01</span><div><b>Your main line</b><p>The number customers actually call. It stays yours and stays where it is.</p></div></li><li class="up" style="--t:206.11s"><span class="n">02</span><div><b>Your hours</b><p>When someone is genuinely at the desk, so we know where the gap starts.</p></div></li><li class="up" style="--t:211.94s"><span class="n">03</span><div><b>What counts as urgent</b><p>No heat below a certain temp, water, elderly or infant in the house. Your call, not ours.</p></div></li><li class="up" style="--t:217.77s"><span class="n">04</span><div><b>How estimates go out</b><p>Email, text, paper. So the follow-up matches how you already work.</p></div></li>
+    </ol>
+</section>
+<section class="scene" style="--t:219.37s;--d:23.37s">
+  <div class="chapterbar">The order things happen</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:219.47s">The order things happen</div>
+    <h2 class="up" style="--t:219.62s">After you say yes.</h2>
+    <p class="cap up" style="--t:230.70s">No pay link before a yes on a call.</p><p class="cap up" style="--t:241.14s">The monthly begins the day you go live. Not before.</p>
+  </div>
+    <ol class="steps up" style="--t:219.57s">
+      <li class="up" style="--t:220.77s"><span class="n">01</span><div><b>You say yes on the call</b><p>Only then do we send a payment link. Never before.</p></div></li><li class="up" style="--t:225.86s"><span class="n">02</span><div><b>Setup fee clears</b><p>$2,500, paid in full. Work starts after it clears.</p></div></li><li class="up" style="--t:230.95s"><span class="n">03</span><div><b>Configuration call</b><p>The four answers, plus we write the message wording together.</p></div></li><li class="up" style="--t:236.05s"><span class="n">04</span><div><b>We test it with you</b><p>You call your own line and hear exactly what your customers will hear.</p></div></li><li class="up" style="--t:241.14s"><span class="n">05</span><div><b>Go live</b><p>It starts catching calls. This is the day the $750 a month begins.</p></div></li>
+    </ol>
+</section>
+<section class="scene" style="--t:242.74s;--d:16.34s">
+  <div class="chapterbar">Pricing</div>
+  <div class="copy">
+    <div class="eyebrow up" style="--t:242.84s">Pricing</div>
+    <h2 class="up" style="--t:242.99s">Two numbers. No surprises.</h2>
+    <p class="cap up" style="--t:250.56s">Setup covers the build, the configuration, and testing it with you.</p><p class="cap up" style="--t:257.48s">Monthly. Cancel any time.</p>
+  </div>
+    <div class="price up" style="--t:243.04s">
+      <div class="head"><span>Work order — recovery setup</span><span>No. 0001</span></div>
+      <div class="pgrid">
+        <div><div class="lbl">One-time setup</div><div class="amt">$2,500</div><p>Paid once, before any work starts.</p></div>
+        <div><div class="lbl">Then, monthly</div><div class="amt mo">$750</div><p>Starts the day you go live. Cancel any time.</p></div>
+      </div>
+      <div class="pfoot up" style="--t:245.64s">No revenue share. No per-call fee. No pay link until you say yes on a call.</div>
+    </div>
+</section>
+<section class="scene" style="--t:259.08s;--d:13.98s">
+  <div class="chapterbar">Next step</div>
+  <div class="center">
+      <div class="eyebrow up" style="--t:259.18s">Next step</div>
+      <h1 class="up" style="--t:259.38s">Sound like your shop?</h1>
+      <p class="lede up" style="--t:265.72s">Next step is a fifteen-minute call.</p><p class="lede up" style="--t:271.46s">Reply to the email that sent you here.</p>
+    </div>
+</section>
+<div class="progress"></div>
+</div></body></html>

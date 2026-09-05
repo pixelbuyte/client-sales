@@ -50,6 +50,26 @@ screenshots it, so a composition is just a page where every motion has an absolu
 composition may also define `window.__seek(ms)` for anything CSS can't animate (the running
 total in video 2 uses it).
 
+## The 5-minute demo video (with voiceover)
+
+`design/video/03-demo/05-minute-demo.mp4` — 1920×1080, 4 min 33 s, H.264 + AAC. This is the
+video version of the `/demo` page: the three scenarios message by message, the weekly recap,
+the four setup answers, what happens after a yes, pricing, and the fifteen-minute-call close.
+The voiceover is synthesized locally with Piper (voice `en_US-ryan-high`), so there are no
+credits, accounts, or uploads involved.
+
+```bash
+design/tools/fetch-voice.sh                      # once per machine: downloads the voice model (~120 MB, not committed)
+node design/tools/build-demo-video.mjs design/video/03-demo/storyboard.json
+```
+
+`storyboard.json` is the single source: each scene has a layout (`title`, `clock`, `thread`,
+`beats`, `list`, `grid`, `tickets`, `pricing`, `recap`), its on-screen data, and its `vo` line.
+The builder synthesizes each scene's voiceover, sizes the scene to the audio, writes
+`composition.html`, renders it with `render-video.mjs`, mixes the voice track (plus a phone-ring
+effect where a scene says `"sfx": "ring"`), and muxes the MP4. Edit a `vo` line and re-run; only
+the changed scenes are re-synthesized.
+
 ## Regenerating screenshots
 
 ```bash
